@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROCKIN · Saxo</title>
+  <meta name="description" content="Tutor d'estudi de saxo amb el full de ruta i les cartes ROCKIN: escoltes, la banda continua, el diagrama de claus et guia i, amb el TravelSax, el joc sent el que toques.">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=1">
+  <script>
+    window.addEventListener('error', (e) => showPageError(e.message, e.filename, e.lineno));
+    window.addEventListener('unhandledrejection', (e) => showPageError(String(e.reason?.message ?? e.reason)));
+    function showPageError(message, file = '', line) {
+      const box = document.getElementById('page-error');
+      if (!box) return;
+      const where = file ? ` (${String(file).split('/').pop()}:${line})` : '';
+      box.hidden = false;
+      box.textContent = line === undefined && !file ? message : `Hi ha hagut un error${where}: ${message}. Prova de recarregar amb Cmd+Maj+R; si continua, envia aquest missatge.`;
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const why = location.protocol === 'file:'
+        ? "El joc s'ha obert com a fitxer (doble clic a index.html) i així el navegador no el deixa funcionar. Obre'l des del Terminal amb: cd ~/Documents/GitHub/saxo && python3 tools/serve.py — o bé des de l'adreça publicada a GitHub Pages."
+        : "El joc no s'ha acabat de carregar. Recarrega la pàgina amb Cmd+Maj+R; si continua, envia aquest missatge.";
+      setTimeout(() => { if (!window.__rockinReady) showPageError(why); }, location.protocol === 'file:' ? 300 : 6000);
+    });
+  </script>
+        <script type="importmap" id="versions">{"imports": {"./js/app.js": "./js/app.js?v=1", "./js/assoliment.js": "./js/assoliment.js?v=1", "./js/audio.js": "./js/audio.js?v=1", "./js/autoregulacio.js": "./js/autoregulacio.js?v=1", "./js/band.js": "./js/band.js?v=1", "./js/guide.js": "./js/guide.js?v=1", "./js/instruments.js": "./js/instruments.js?v=1", "./js/lane.js": "./js/lane.js?v=1", "./js/levels.js": "./js/levels.js?v=1", "./js/library.js": "./js/library.js?v=1", "./js/midi.js": "./js/midi.js?v=1", "./js/parts.js": "./js/parts.js?v=1", "./js/player.js": "./js/player.js?v=1", "./js/saxo-core.js": "./js/saxo-core.js?v=1", "./js/saxview.js": "./js/saxview.js?v=1", "./js/session.js": "./js/session.js?v=1", "./js/sjudge.js": "./js/sjudge.js?v=1", "./js/skills.js": "./js/skills.js?v=1", "./js/songs.js": "./js/songs.js?v=1", "./js/songview.js": "./js/songview.js?v=1", "./js/store.js": "./js/store.js?v=1", "./js/theory.js": "./js/theory.js?v=1", "./js/data/cartes.js": "./js/data/cartes.js?v=1", "./js/data/llibre-obert.js": "./js/data/llibre-obert.js?v=1", "./js/data/llibre.js": "./js/data/llibre.js?v=1", "./js/data/sons.js": "./js/data/sons.js?v=1"}}</script>
+  <script type="module" src="js/app.js?v=1"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="home-link" title="Inici">
+      <img src="https://rockin.cat/wp-content/uploads/2022/07/rockin-logo.svg" alt="Rockin" onerror="this.outerHTML='<b class=&quot;wordmark&quot;>ROCKIN</b>'">
+      <span>Saxo</span>
+    </a>
+    <button type="button" id="song-chip" class="song-pill" data-go="song" hidden></button>
+    <div class="top-right">
+      <div class="inst-switch" id="inst-switch" role="group" aria-label="Instrument">
+        <button type="button" data-inst="alt">Alt</button>
+        <button type="button" data-inst="tenor">Tenor</button>
+      </div>
+      <button type="button" id="player-chip" class="chip" title="Canvia d'alumne" hidden><svg class="player-ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span></span></button>
+      <button type="button" id="listen-chip" class="chip listen-chip" title="Connecta el TravelSax (USB-C o Bluetooth MIDI)">🎷 Connecta el TravelSax</button>
+      <button type="button" id="fs-btn" class="chip chip-icon" data-fs title="Pantalla completa" aria-label="Pantalla completa"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      <button type="button" id="settings-btn" class="chip chip-icon" title="Configuració" aria-label="Configuració"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Seccions">
+    <button type="button" data-go="home" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inici</span></button>
+    <button type="button" data-go="song" data-nav="song"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Cançó</span></button>
+    <button type="button" data-go="map" data-nav="map"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span>Full de ruta</span></button>
+    <button type="button" data-go="skills" data-nav="skills"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></svg><span>Què sé fer</span></button>
+    <button type="button" data-go="guide" data-nav="guide"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><span>Llegir la pantalla</span></button>
+    <small class="rail-ver" id="version">v1 · 27-10-2026</small>
+  </nav>
+
+  <main>
+    <div id="page-error" class="page-error" hidden></div>
+    <section id="v-home" class="view"></section>
+    <section id="v-map" class="view" hidden></section>
+    <section id="v-level" class="view" hidden></section>
+    <section id="v-cards" class="view" hidden></section>
+    <section id="v-song" class="view" hidden></section>
+    <section id="v-skills" class="view" hidden></section>
+    <section id="v-guide" class="view" hidden></section>
+    <section id="v-session" class="view" hidden></section>
+  </main>
+
+  <dialog id="settings" class="settings">
+    <form method="dialog">
+      <h2>Configuració</h2>
+      <label class="set-row">«Ara ve»: la nota següent apareix al diagrama
+        <select id="set-lead">
+          <option value="1">1 temps abans</option>
+          <option value="2">2 temps abans</option>
+          <option value="4">1 compàs abans</option>
+        </select></label>
+      <p class="muted small">Com més aviat, més temps per preparar els dits; com més tard, menys coses a la pantalla.</p>
+      <p class="muted small">ROCKIN SCCL · materials amb llicència Creative Commons · sons: mostres lliures (MIT) i saxo sintètic · Versió 1 · 27-10-2026</p>
+      <div class="row"><button class="btn" value="ok">Fet</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
