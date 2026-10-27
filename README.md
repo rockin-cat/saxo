@@ -43,6 +43,16 @@ Els del document «Notació Saxo» de ROCKIN: `1` = Si · `2` = La (1+2) · `3` 
 
 «Cançó» obre el Llibre ROCKIN, la biblioteca compartida del Generador (amb el codi del professorat: és on arriben les melodies de saxo), un fitxer exportat del Generador (.json), les rodes del joc de teclat i les cançons pròpies. Si la cançó té més d'una melodia de saxo, a la pràctica es pot triar quina.
 
+## Pensat perquè es pugui retirar
+
+- **L'ajuda es retira per capes** mentre toques: primer el diagrama (els dits, de memòria; si t'equivoques torna un instant), després els números (la pista només porta el ritme: cal recordar la nota) i al final la pista (només el pols).
+- **«A cegues»**, l'últim pas de cada nivell: el mateix que acabes de fer, sense cap ajuda visual mentre toques. Amb el TravelSax, el joc compara el percentatge amb el del pas amb ajuda: si cau molt, encara depens de la pantalla.
+- **Pantalla senzilla** per defecte (⚙ Configuració): diagrama sense claus laterals ni de trins, el número i «ara ve»; sense el nom de la nota escrita ni el paper dins l'acord (el paper només als passos de nota propera). Els veredictes en text mentre toques estan apagats: el color a la pista i el resum del final.
+
+## Versió 2 · 27-10-2026
+
+Retirada de l'ajuda per capes, pas «A cegues» a cada nivell i pantalla senzilla.
+
 ## Versió 1 · 27-10-2026
 
 Primera versió: full de ruta sencer, melodia del Generador i contorn sobre acords, TravelSax, joc d'afinar d'oïda, composició i improvisació. Pendent: provar-ho amb un TravelSax de veritat (calibratge, retard per Bluetooth, si envia CC2) i amb alumnat.

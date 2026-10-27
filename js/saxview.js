@@ -7,7 +7,7 @@ import { writtenName, realName, numOf } from './instruments.js';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const DYN = { p: 'fluix', mf: 'mig', f: 'fort' };
 
-export function createSaxView(host, inst) {
+export function createSaxView(host, inst, { simple = true } = {}) {
   host.innerHTML = `
     <div class="saxview" style="--accent:${inst.color}">
       <div class="sv-main">
@@ -38,7 +38,7 @@ export function createSaxView(host, inst) {
   function bigDiagram(num) {
     if (drawn === num) return;
     drawn = num;
-    el.diagram.innerHTML = num == null ? SAXO.svgDiagrama('0', { ample: 150 }).replace('class="saxo-diagrama"', 'class="saxo-diagrama empty"') : SAXO.svgDiagrama(num, { ample: 150 });
+    el.diagram.innerHTML = num == null ? SAXO.svgDiagrama('0', { ample: 150, simple }).replace('class="saxo-diagrama"', 'class="saxo-diagrama empty"') : SAXO.svgDiagrama(num, { ample: 150, simple });
   }
 
   const api = {
@@ -49,7 +49,7 @@ export function createSaxView(host, inst) {
         host.querySelector('.saxview').classList.add('scale-mode');
         if (scaleKey !== view.key) {
           scaleKey = view.key;
-          el.scale.innerHTML = view.notes.map((n) => `<div class="sv-chip ${n.cls ?? ''}" data-num="${esc(n.num)}"><div class="sv-mini">${SAXO.svgDiagrama(n.num, { ample: 54 })}</div><b>${esc(n.num)}</b><small>${esc(n.role ?? '')}</small></div>`).join('');
+          el.scale.innerHTML = view.notes.map((n) => `<div class="sv-chip ${n.cls ?? ''}" data-num="${esc(n.num)}"><div class="sv-mini">${SAXO.svgDiagrama(n.num, { ample: 54, simple })}</div><b>${esc(n.num)}</b><small>${esc(n.role ?? '')}</small></div>`).join('');
         }
         el.caption.textContent = view.label ?? '';
         el.label.textContent = 'TRIA UNA';
@@ -68,7 +68,8 @@ export function createSaxView(host, inst) {
         bigDiagram(cur.num);
         el.num.textContent = cur.num;
         el.num.classList.toggle('long', String(cur.num).length > 3);
-        el.name.textContent = `${writtenName(inst, cur.midi)}${cur.role ? ` · ${cur.role}` : ''}`;
+        // pantalla senzilla: ni el nom de la nota escrita ni el paper (el paper només si el pas ho demana)
+        el.name.textContent = [simple ? '' : writtenName(inst, cur.midi), view.showRole && cur.role ? `paper ${cur.role}` : ''].filter(Boolean).join(' · ');
         el.dyn.hidden = !cur.dyn;
         if (cur.dyn) { el.dyn.textContent = cur.dyn; el.dyn.dataset.d = cur.dyn; el.dyn.title = DYN[cur.dyn] ?? ''; }
       } else {
@@ -80,7 +81,7 @@ export function createSaxView(host, inst) {
       const nx = view.showNext ? view.next : null;
       if (nx && nx.num != null && nx.num !== cur?.num) {
         el.next.hidden = false;
-        if (drawnNext !== nx.num) { drawnNext = nx.num; el.nextdiag.innerHTML = SAXO.svgDiagrama(nx.num, { ample: 60 }); }
+        if (drawnNext !== nx.num) { drawnNext = nx.num; el.nextdiag.innerHTML = simple ? '' : SAXO.svgDiagrama(nx.num, { ample: 60 }); }
         el.nextnum.textContent = nx.num;
       } else el.next.hidden = true;
       el.caption.textContent = view.label ?? '';
@@ -96,6 +97,8 @@ export function createSaxView(host, inst) {
       for (const c of el.scale.querySelectorAll('.sv-chip')) c.classList.toggle('lit', c.dataset.num === num);
     },
     released() { for (const c of el.scale.querySelectorAll('.sv-chip')) c.classList.remove('lit'); },
+    /** Quan l'ajuda està retirada i t'equivoques: el diagrama torna un instant. */
+    peek() { el.diagram.classList.remove('peek'); void el.diagram.offsetWidth; el.diagram.classList.add('peek'); },
     clear() { bigDiagram(null); el.num.textContent = '—'; el.name.textContent = ''; el.next.hidden = true; el.dyn.hidden = true; el.caption.textContent = ''; },
     animate() { /* res a animar per fotograma: el diagrama es redibuixa quan canvia la nota */ },
   };

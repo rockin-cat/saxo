@@ -135,14 +135,17 @@
   ];
   const COLORS_CLAUS = { plat: '#4472c4', greu: '#c00000', oct: '#7030a0', tril: '#00b050', agut: '#ed7d31' };
 
-  // SVG del diagrama amb les claus del número marcades. opts: { ample, etiqueta }
+  // SVG del diagrama amb les claus del número marcades. opts: { ample, simple }
+  // simple: només les claus que es fan servir als primers nivells (sense laterals ni trins)
   function svgDiagrama(numero, opts = {}) {
     const premudes = new Set(claus(numero) || []);
+    const amaga = opts.simple ? new Set(['agut', 'tril']) : new Set();
     const ample = opts.ample || 100, alt = Math.round(ample * 262 / 136);
     let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 262" width="${ample}" height="${alt}" class="saxo-diagrama" font-family="Ubuntu, Arial, sans-serif">`;
     s += `<polygon points="48,6 86,6 102,256 32,256" fill="#fff" stroke="#222" stroke-width="2"/>`;
     s += `<circle cx="12" cy="34" r="7" fill="none" stroke="#4472c4" stroke-width="2"/>`;   // suport del polze
     CLAUS_DIBUIX.forEach(k => {
+      if (amaga.has(k.c)) return;
       const on = premudes.has(k.id), col = COLORS_CLAUS[k.c];
       const fill = on ? '#1b1f2b' : col, op = on ? 1 : 0.28, stroke = on ? '#000' : col, sw = on ? 2 : 1;
       const attrs = `fill="${fill}" fill-opacity="${op}" stroke="${stroke}" stroke-width="${sw}"`;

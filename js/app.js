@@ -54,7 +54,7 @@ function applyAccent() {
 const metreNow = () => store.workSong()?.metre ?? '4/4';
 const hasLine = () => !!(store.workSong()?.saxo?.length);
 const fits = (p) => stepFits(p, metreNow(), (id) => cardMetre(cardById(id)), hasLine());
-const visibleSteps = (l) => l.passos.filter(fits);
+const visibleSteps = (l) => { const v = l.passos.filter(fits); return v.filter((p) => !p.cegues || v.some((q) => !q.cegues && (q.kind ?? 'play') === 'play' && q.part)); };
 // un pas és fet a partir d'«A prop»; els de «Totes les cartes» quan alguna carta ho és
 const stepDone = (p) => (p.kind === 'cards'
   ? Object.entries(store.player()?.steps ?? {}).some(([k, v]) => k.startsWith(`${p.id}:`) && reached(v))
@@ -204,7 +204,7 @@ function renderLevel(n = currentLevel) {
           <span class="step-state">${p.kind === 'cards' ? (stepDone(p) ? '<span class="lvl-pill lvl-gairebe">Fet</span>' : pill(null)) : pill(s?.best)}</span>
           <div class="step-text"><b>${k + 1}. ${esc(p.titol)}</b><small>${esc(p.text ?? '')}</small>
             ${s?.status !== 'ok' && s?.gaps?.length ? `<span class="step-gaps">La darrera vegada et va faltar: ${esc(s.gaps.map(gapText).join(', ').toLowerCase())}</span>` : ''}</div>
-          <button type="button" class="btn ${s?.best === 'ok' ? 'btn-ghost' : 'btn-primary'}" data-step="${p.id}">${p.kind === 'cards' ? 'Tria carta' : p.kind === 'tune' ? 'Afina' : s?.best === 'ok' ? 'Repassa' : 'Practica'}</button>
+          <button type="button" class="btn ${s?.best === 'ok' ? 'btn-ghost' : 'btn-primary'}" data-step="${p.id}">${p.kind === 'cards' ? 'Tria carta' : p.kind === 'tune' ? 'Afina' : p.cegues ? 'Prova-ho' : s?.best === 'ok' ? 'Repassa' : 'Practica'}</button>
         </li>`; }).join('')}
     </ol>`;
 }
@@ -220,9 +220,16 @@ function openStep(id) {
   const level = LEVELS[i.id][step.nivell - 1];
   const lsteps = visibleSteps(level);
   const k = lsteps.findIndex((p) => p.id === id);
+  // «A cegues»: el mateix que l'últim pas tocat del nivell, sense ajuda visual
+  let toOpen = step;
+  if (step.cegues) {
+    const ref = [...lsteps].reverse().find((p) => !p.cegues && (p.kind ?? 'play') === 'play' && p.part);
+    if (!ref) { renderLevel(step.nivell); show('level'); return; }
+    toOpen = { ...ref, id: step.id, titol: `A cegues · ${ref.titol}`, text: step.text, com: step.com, cegues: true, refId: ref.id, refTitol: ref.titol, nivell: step.nivell };
+  }
   show('session');
   const next = steps[idx + 1];
-  openSession($('#v-session'), step, {
+  openSession($('#v-session'), toOpen, {
     inst: i.id,
     backLabel: `Nivell ${step.nivell}`,
     crumb: `Pas ${k + 1} de ${lsteps.length}`,
@@ -514,7 +521,7 @@ document.addEventListener('click', (ev) => {
   if (!b) return;
   if (b.id === 'home-link') { ev.preventDefault(); renderHome(); show('home'); return; }
   if (b.id === 'player-chip') { store.setCurrent(null); renderHome(); show('home'); return; }
-  if (b.id === 'settings-btn') { $('#set-lead').value = String(store.settings().nextLead ?? 2); $('#settings').showModal(); return; }
+  if (b.id === 'settings-btn') { $('#set-lead').value = String(store.settings().nextLead ?? 2); $('#set-simple').checked = store.settings().simple !== false; $('#set-verdicts').checked = !!store.settings().verdictText; $('#settings').showModal(); return; }
   if (b.dataset.fs !== undefined) { toggleFullscreen(); return; }
   if (b.id === 'listen-chip') { midi.openDialog({ onChange: midiChip }); return; }
   if (b.dataset.inst && b.closest('#inst-switch, .inst-tiles')) {
@@ -557,6 +564,8 @@ document.addEventListener('click', (ev) => {
 
 $('#settings').addEventListener('close', () => {
   store.settings().nextLead = Number($('#set-lead').value) || 2;
+  store.settings().simple = $('#set-simple').checked;
+  store.settings().verdictText = $('#set-verdicts').checked;
   store.save();
 });
 

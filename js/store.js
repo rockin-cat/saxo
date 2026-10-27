@@ -77,3 +77,7 @@ export function setWorkSong(song) { const p = player(); if (!p) return; p.song =
 /** Quina melodia del Generador es fa servir (si la cançó en té més d'una). */
 export const lineIdx = () => player()?.lineIdx ?? 0;
 export function setLineIdx(i) { const p = player(); if (!p) return; p.lineIdx = i; save(); }
+
+/** El percentatge que el joc ha sentit l'última vegada a cada pas (per comparar amb ajuda i a cegues). */
+export const heardOf = (id) => player()?.heard?.[id] ?? null;
+export function setHeard(id, pct) { const p = player(); if (!p) return; (p.heard ??= {})[id] = pct; save(); }

@@ -25,7 +25,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
 
   function draw(pos, opts = {}) {
     last = [pos, opts];
-    const { voice = false, marks = null } = opts;
+    const { voice = false, marks = null, labels = true } = opts;
     const c = ctx2;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.clearRect(0, 0, w, h);
@@ -103,7 +103,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
           c.globalAlpha = past ? 0.35 : 1;
           if (e.kind === 'strum') arrow(c, x, rowEv, e.dir, e.ghost, color, len);
           else if (e.tied) tie(c, x, rowEv, len);
-          else bubble(c, x, rowEv, e.label, color, len, e.role);
+          else bubble(c, x, rowEv, labels ? e.label : '', color, len, labels ? e.role : '');
           if (e.dyn && !e.tied) { c.fillStyle = '#fdbe10'; c.font = 'italic 700 14px Georgia, serif'; c.fillText(e.dyn, x + 8, rowEv - 24); }
           c.globalAlpha = 1;
         }
@@ -168,12 +168,14 @@ function bubble(c, x, y, label, color, len, role) {
   c.fillRect(x + r, y - 4, Math.max(0, len - r), 8);
   c.fillStyle = color;
   c.beginPath(); c.arc(x + r, y, r, 0, Math.PI * 2); c.fill();
-  c.fillStyle = '#111';
-  const s = String(label);
-  c.font = `700 ${s.length > 3 ? 10 : s.length > 2 ? 12 : 15}px Ubuntu, sans-serif`;
-  c.textAlign = 'center';
-  c.fillText(s, x + r, y + 5);
-  c.textAlign = 'left';
+  const s = String(label ?? '');
+  if (s) {
+    c.fillStyle = '#111';
+    c.font = `700 ${s.length > 3 ? 10 : s.length > 2 ? 12 : 15}px Ubuntu, sans-serif`;
+    c.textAlign = 'center';
+    c.fillText(s, x + r, y + 5);
+    c.textAlign = 'left';
+  }
   if (role) { c.fillStyle = 'rgba(255,255,255,0.55)'; c.font = '600 10px Ubuntu, sans-serif'; c.fillText(role, x + r + 12, y + 22); }
 }
 /** La continuació d'una nota que ve del compàs anterior (no es torna a atacar). */

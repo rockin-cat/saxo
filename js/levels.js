@@ -4,6 +4,7 @@
 //   id, titol, text (què aprens), com: [consells], prog ('C | G | Am | F'), metre, tempo, estil,
 //   part (vegeu parts.js), voice, carta (id de carta ROCKIN), kind: 'play' (per defecte) | 'sing' | 'cards' | 'tune' | 'compose' | 'improv'
 //   grup: nom del grup de passos · needsLine: només surt si la cançó porta melodia de saxo del Generador
+//   cegues: el pas «A cegues» del nivell (repeteix l'últim pas tocat del nivell sense ajuda visual)
 //   metres: només surt en aquests compassos
 //
 // Dos camins que es troben: la MELODIA de la cançó (la que el professorat escriu al Generador de diagrames, amb els
@@ -20,6 +21,7 @@ const SAXO = [
       { id: 's1b', grup: 'Les notes dels acords', titol: 'Fonamentals a negres', text: 'La fonamental a cada temps: la llengua fa «tu» a cada nota i l\'aire no s\'atura.', com: ['La pista t\'avisa del número següent amb temps.'], prog: 'G | D | Em | C', tempo: 80, estil: 'pop', part: { type: 'arrels', rhythm: 'Q' } },
       { id: 's1c', grup: 'Les notes dels acords', titol: 'La nota més propera', text: 'Cada acord té tres notes (1, 3 i 5). Quan canvia l\'acord, no saltis: ves a la nota de l\'acord nou que tens més a prop, o queda\'t si ja hi és. Surt una línia que gairebé no es mou.', com: ['El número petit al costat de la nota diu quina nota de l\'acord és: 1, 3 o 5.', 'Això és el que fa un saxo dins d\'una banda: una segona veu que acompanya.'], prog: 'G | D | Em | C', tempo: 70, estil: 'balada', part: { type: 'propera', rhythm: 'W', tones: 3 } },
       { id: 's1d', grup: 'Les notes dels acords', titol: 'Nota propera a negres', text: 'La mateixa línia, una nota per temps.', com: ['Quan et surti, prova-ho amb una altra cançó: la regla és la mateixa.'], prog: 'G | D | Em | C', tempo: 80, estil: 'pop', part: { type: 'propera', rhythm: 'Q', tones: 3 } },
+      { id: 's1z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -39,6 +41,7 @@ const SAXO = [
       { id: 's2f3', titol: 'En 6/8: llarga i curta', text: 'Dins de cada pulsació, una nota llarga i una de curta.', com: ['Sona com un galop lent.'], tempo: 60, estil: 'balada68', part: { type: 'arrels', card: 'mt36' }, carta: 'mt36' },
       { id: 's2h1', titol: 'En 12/8: tres per pulsació', text: 'Quatre pulsacions, cadascuna en tres.', com: ['Tu-tu-tu a cada pulsació.'], tempo: 55, estil: 'balada68', part: { type: 'arrels', card: 'mt26' }, carta: 'mt26' },
       { id: 's2g', kind: 'cards', deck: 'ritme', titol: 'Totes les cartes rítmiques', text: 'Tria qualsevol carta rítmica i practica-la amb la teva cançó (amb la nota propera).', prog: 'C | G | Am | F', tempo: 80, estil: 'pop' },
+      { id: 's2z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -48,6 +51,7 @@ const SAXO = [
       { id: 's3b', titol: 'Crescendo', text: 'Dins de cada compàs, de fluix a fort.', com: ['Comença molt fluix: si ja comences fort, no pots pujar.'], prog: 'Am | F | C | G', tempo: 70, estil: 'balada', part: { type: 'arrels', rhythm: 'Q', dyn: 'cresc' } },
       { id: 's3c', titol: 'Diminuendo', text: 'De fort a fluix, dins de cada compàs.', com: ['L\'últim temps, quasi un xiuxiueig, però que soni.'], prog: 'Am | F | C | G', tempo: 70, estil: 'balada', part: { type: 'arrels', rhythm: 'Q', dyn: 'dim' } },
       { id: 's3m', needsLine: true, titol: 'La melodia amb dinàmica', text: 'La melodia de la cançó: dos compassos forts i dos de fluixos.', com: ['Les lletres a la pista (f, p) diuen el volum.'], tempo: 85, estil: 'pop', part: { type: 'melodia', dyn: ['f', 'f', 'p', 'p'] } },
+      { id: 's3z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -59,6 +63,7 @@ const SAXO = [
       { id: 's4a', kind: 'sing', titol: 'Canta les fonamentals', text: 'El saxo del joc toca la fonamental de cada acord i tu la cantes amb «uuu».', com: ['Tanca la boca i fes «uuu»: és més fàcil trobar la nota.'], prog: 'C | G | Am | F', tempo: 70, estil: 'balada', part: { type: 'arrels', rhythm: 'W' }, voice: 'part' },
       { id: 's4b', kind: 'sing', titol: 'Canta la nota propera', text: 'La línia de nota propera, cantada.', com: ['Escolta-la unes quantes vegades abans de cantar.'], prog: 'C | G | Am | F', tempo: 75, estil: 'balada', part: { type: 'propera', rhythm: 'W', tones: 3 }, voice: 'part' },
       { id: 's4c', titol: 'Canta-la i després toca-la', text: 'Dos compassos cantats i dos tocats, amb la nota propera.', com: ['Si pots cantar-la, pots tocar-la.'], prog: 'C | G | Am | F', tempo: 75, estil: 'pop', part: { type: 'propera', rhythm: 'Q', tones: 3 }, voice: 'part', alternate: true },
+      { id: 's4z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -70,6 +75,7 @@ const SAXO = [
       { id: 's5d', titol: 'Sol# i La: 3+ i 2', text: 'La clau del Sol# amb el dit petit, i després fora.', com: ['El dit petit treballa sol: la resta de la mà no es mou.'], prog: 'E | E | E | E', tempo: 70, estil: 'pop', part: { type: 'canvi', a: '3+', b: '2', rhythm: 'Q' }, canco: false },
       { id: 's5e', titol: 'Fa# i Sol: 4,5 i 3', text: 'El Fa# es fa amb el dit 5 (i no el 4): un dit que puja i un altre que baixa.', com: ['Lent primer: el canvi ha de ser net, sense nota intermèdia.'], prog: 'D | D | D | D', tempo: 70, estil: 'pop', part: { type: 'canvi', a: '4,5', b: '3', rhythm: 'Q' }, canco: false },
       { id: 's5m', needsLine: true, titol: 'Els canvis difícils de la melodia', text: 'El joc busca a la melodia els dos canvis de digitació on es mouen més dits, i te\'ls fa repetir.', com: ['Quan els tinguis, torna a la melodia sencera (nivell 1).'], tempo: 65, estil: 'balada', part: { type: 'canvi', fromLine: true, rhythm: 'Q' } },
+      { id: 's5z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -80,6 +86,7 @@ const SAXO = [
       { id: 's6c', titol: 'Llarga i curtes', text: 'Una carta amb notes de durades diferents: la llengua fa el ritme, l\'aire sosté.', com: ['Les notes llargues, plenes fins al final; les curtes, netes.'], prog: 'Am | F | C | G', tempo: 75, estil: 'pop', part: { type: 'propera', card: 'mb11', tones: 3 }, carta: 'mb11' },
       { id: 's6d', titol: 'Semicorxeres', text: 'Quatre per temps, a poc a poc: la llengua ha d\'anar molt lleugera.', com: ['Si s\'embussa, baixa el tempo.'], prog: 'Em | Em | D | D', tempo: 55, estil: 'funk', part: { type: 'arrels', rhythm: 'S' } },
       { id: 's6m', needsLine: true, titol: 'La melodia, ben picada', text: 'La melodia de la cançó a corxeres: cada nota, un cop de llengua.', com: ['Les notes repetides són les que diuen si la llengua funciona.'], tempo: 80, estil: 'pop', part: { type: 'melodia', card: 'mb13' }, carta: 'mb13' },
+      { id: 's6z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {
@@ -96,6 +103,7 @@ const SAXO = [
       { id: 's8m2', needsLine: true, titol: 'La melodia una tercera per sota', text: 'Ara dues notes més avall.', com: ['A la banda, un saxo fa la melodia i l\'altre la segona veu.'], tempo: 80, estil: 'balada', part: { type: 'segona', interval: -2 } },
       { id: 's8a', titol: 'Comença des de la tercera', text: 'La línia de nota propera, però començant per la tercera de l\'acord: una segona veu per sobre.', com: ['El número petit diu si fas la 1, la 3 o la 5.'], prog: 'G | D | Em | C', tempo: 75, estil: 'balada', part: { type: 'propera', rhythm: 'Q', tones: 3, start: 3 } },
       { id: 's8b', titol: 'Comença des de la quinta', text: 'Ara començant per la quinta.', com: ['Tres saxos poden fer aquestes tres línies alhora: és un acord que es mou.'], prog: 'G | D | Em | C', tempo: 75, estil: 'balada', part: { type: 'propera', rhythm: 'Q', tones: 3, start: 5 } },
+      { id: 's8z', cegues: true, titol: 'A cegues', text: 'El que acabes de fer, sense pantalla: només la banda i tu. Mentre toques no hi ha diagrama, ni números, ni pista. És la prova de si ho tens de veritat.', com: ['Si et perds, espera el principi del compàs següent.', 'Amb el TravelSax connectat, el joc compara el percentatge amb el del pas anterior (amb ajuda).'] },
     ],
   },
   {

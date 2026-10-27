@@ -566,10 +566,7 @@ main { grid-area: main; min-height: 0; min-width: 0; position: relative; display
 
 /* L'ajuda que es retira (s'esvaeix a poc a poc) */
 .stage .lane, .stage .neck-host, .side .card-host { transition: opacity 1.6s ease, filter 1.6s ease; }
-.stage[data-help="1"] .lane { opacity: .3; filter: blur(1px); }
-.stage[data-help="2"] .lane { opacity: 0; }
-.stage[data-help="2"] .neck-host { opacity: .3; }
-.stage[data-help="3"] .lane, .stage[data-help="3"] .neck-host { opacity: 0; }
+.stage[data-help="3"] .lane { opacity: 0; }
 .side[data-help="2"] .card-host { opacity: .35; }
 .side[data-help="3"] .card-host { opacity: 0; }
 .stage[data-help="1"] .hcell.on { background: var(--nit2); transform: none; }
@@ -761,8 +758,14 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
 .saxview.scale-mode .sv-num { display: none; }
 .saxview.scale-mode .sv-you { margin: 0; font-size: 22px; padding: 8px 16px; }
 .sv-caption { text-align: center; color: #fff; opacity: .75; font-size: 13px; min-height: 16px; }
-.stage[data-help="2"] .sv-next, .stage[data-help="3"] .sv-next, .stage[data-help="3"] .sv-diagram { opacity: .12; }
-.stage[data-help="3"] .sv-num { opacity: .3; }
+/* les capes de l'ajuda: 1 → sense diagrama (ni «ara ve») · 2 → sense números · 3 → sense pista */
+.sv-diagram, .sv-next, .sv-num, .sv-name { transition: opacity 1.2s ease; }
+.stage[data-help="1"] .sv-diagram, .stage[data-help="2"] .sv-diagram, .stage[data-help="3"] .sv-diagram { opacity: 0; }
+.stage[data-help="1"] .sv-next, .stage[data-help="2"] .sv-next, .stage[data-help="3"] .sv-next { opacity: 0; }
+.stage[data-help="2"] .sv-num, .stage[data-help="2"] .sv-name, .stage[data-help="3"] .sv-num, .stage[data-help="3"] .sv-name { opacity: 0; }
+.stage[data-help="3"] .sv-you, .stage[data-help="3"] .sv-caption { opacity: 0; }
+.stage .sv-diagram.peek { opacity: 1 !important; transition: opacity .1s; animation: peek 1.4s ease forwards; }
+@keyframes peek { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
 .canvi-boxes { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .canvi-fig { margin: 0; text-align: center; font-size: 12px; }
 .canvi-fig figcaption b { font-size: 14px; }

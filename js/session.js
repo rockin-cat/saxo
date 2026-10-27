@@ -186,7 +186,10 @@ export function openSession(host, baseStep, ctx) {
   st.root = root;
   st.el = (name) => $(`[data-el="${name}"]`, root);
 
-  st.sax = createSaxView(st.el('sax'), inst);
+  st.simple = S.simple !== false;
+  st.blind = !!step.cegues;
+  st.sax = createSaxView(st.el('sax'), inst, { simple: st.simple });
+  st.showRole = !st.simple || ['propera', 'arp', 'compose'].includes(step.part?.type);
   st.lane = createLane(st.el('lane'), { color: inst.color });
   st.el('tempo').textContent = st.tempo;
   st.el('metro').checked = st.metronome;
@@ -206,10 +209,11 @@ export function openSession(host, baseStep, ctx) {
     $('[data-act="play"]', root).textContent = '▶ Comença';
   }
   if (kind === 'sing') { $('[data-act="full"]', root).hidden = true; st.el('guide').closest('label').hidden = true; st.el('fade').closest('label').hidden = true; }
+  if (st.blind) { st.el('guide').closest('label').hidden = true; st.el('fade').closest('label').hidden = true; st.guide = 0; st.fade = false; }
 
   renderSongBar(st);
   updateMidiUi(st);
-  st.auto = st.kind !== 'improv' && st.kind !== 'compose' && st.kind !== 'sing';
+  st.auto = st.kind !== 'improv' && st.kind !== 'compose' && st.kind !== 'sing' && !st.blind;
   if (st.auto) applyAutoHelp(st);
   showHelpInd(st);
   // el que toca l'alumnat surt al diagrama (de color segons el veredicte)
@@ -454,11 +458,12 @@ function showVerdict(st, v) {
   else if (!e) { const p = player.position(); if (p) st.marks.push({ abs: p.abs - 0.03 / p.spq, cls }); }
   if (st.marks.length > 80) st.marks.splice(0, st.marks.length - 80);
   if (v.got != null) st.sax.played(v.got, cls);
+  if ((v.kind === 'wrongnote' || v.kind === 'octava') && st.helpLevel >= 1 && !st.blind) st.sax.peek();
   const stage = st.root.querySelector('.stage');
   stage.classList.remove('fl-ok', 'fl-mid', 'fl-bad');
   void stage.offsetWidth;
   if (cls) stage.classList.add(`fl-${cls}`);
-  if (st.helpLevel >= 3) return;
+  if (st.helpLevel >= 3 || !store.settings().verdictText) return;
   const box = st.el('verdicts');
   const d = document.createElement('div');
   d.className = `verdict v-${cls}`;
@@ -483,6 +488,7 @@ const tcPos = (ms) => 50 + Math.max(-1, Math.min(1, ms / 100)) * 48;
 /** El resultat que ha sentit el joc: marca el nivell i el que ha faltat (l'alumne ho pot canviar). */
 function applyListen(st, sum) {
   st.listenSum = sum;
+  if (st.step.id) store.setHeard(st.step.id, Math.round(sum.score * 100));
   rate(st, sum.level);
   const options = gapsFor(st.step, st.inst.id);
   const gaps = sum.gaps.filter((g) => options.includes(g));
@@ -588,7 +594,9 @@ function renderResult(st) {
   if (res.autoMsg) html += `<p class="auto-msg">${esc(res.autoMsg)}</p>`;
   const L = st.listenSum;
   if (L) {
-    html += `<div class="res-block res-heard"><h4>El joc t'ha sentit: ${Math.round(L.score * 100)} %</h4>
+    const refPct = st.step.cegues && st.step.refId ? store.heardOf(st.step.refId) : null;
+    const comp = refPct != null ? ` · amb ajuda («${esc(st.step.refTitol)}»): ${refPct} %${Math.round(L.score * 100) >= refPct - 10 ? ' · ho tens de veritat' : ' · amb la pantalla anava millor: encara depens de l\'ajuda'}` : '';
+    html += `<div class="res-block res-heard"><h4>El joc t'ha sentit: ${Math.round(L.score * 100)} %${st.step.cegues ? ' a cegues' : ''}</h4>${comp ? `<p class="muted small">${comp.slice(3)}</p>` : ''}
       <div class="heard-stats"><span><b>${L.onTime}/${L.timed}</b> a temps</span><span><b>${L.right}/${L.pitched}</b> notes bones</span>${L.octava ? `<span><b>${L.octava}</b> d'una altra octava</span>` : ''}${L.missed ? `<span><b>${L.missed}</b> sense sonar</span>` : ''}${L.extras ? `<span><b>${L.extras}</b> de més</span>` : ''}${L.dynChecked ? `<span><b>${L.dynChecked - L.dynBad}/${L.dynChecked}</b> amb la dinàmica bona</span>` : ''}</div>
       ${L.tips.length ? `<ul class="res-tips">${L.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}</div>`;
   }
@@ -646,6 +654,7 @@ function applyAutoHelp(st, level = autoLevel(st)) {
 function showHelpInd(st) {
   const el = st.el('helpind');
   if (!el) return;
+  if (st.blind) { el.innerHTML = '<span class="small">🙈 A cegues: sense ajuda visual</span>'; return; }
   if (!st.auto) { el.innerHTML = st.kind === 'sing' ? '' : '<span class="muted small">Ajuda: a mà (Opcions)</span>'; return; }
   const l = st.autoLevel ?? 0;
   el.innerHTML = `<span class="hi-dots">${[0, 1, 2].map((i) => `<i class="${i <= l ? 'on' : ''}"></i>`).join('')}</span><span class="small">${AUTO_TXT[l]}</span>`;
@@ -744,7 +753,8 @@ function hideAssess(st) { st.el('assess').hidden = true; }
 
 // ---- L'ajuda que es retira --------------------------------------------------------------------------------
 
-const HELP_NOTES = ['', 'Ara la pista es va apagant…', 'Gairebé sense ajuda: escolta la banda.', 'Ara sol: només el pols.'];
+// Les capes: 1 = sense el diagrama (els dits de memòria) · 2 = sense números (la pista només porta el ritme) · 3 = sense pista
+const HELP_NOTES = ['', 'Sense el diagrama: els dits, de memòria. Si t\'equivoques, torna un instant.', 'Sense números: recorda la nota; la pista només porta el ritme.', 'Ara sol: només el pols.'];
 
 function setHelp(st, level) {
   if (st.helpLevel === level) return;
@@ -802,7 +812,8 @@ function frame(st) {
   if (br != null) st.el('lmeter').style.width = `${Math.round(br * 100)}%`;
   const M = st.M;
   const pulse = Math.floor(pos.beat / M.pulseLen);
-  if (st.fade && (mode === 'play' || mode === 'sing') && st.kind !== 'improv') {
+  if (st.blind) setHelp(st, mode === 'play' || mode === 'sing' ? 3 : 0);
+  else if (st.fade && (mode === 'play' || mode === 'sing') && st.kind !== 'improv') {
     st.playStart ??= pos.i;
     const total = roundsFor(st) * st.bars.length;
     const per = Number.isFinite(total) ? Math.max(1, total / 4) : helpStep(st);
@@ -838,7 +849,7 @@ function frame(st) {
     const e = cur ?? next;
     const lead = Math.min(store.settings().nextLead ?? 2, M.pulses) * M.pulseLen;
     const nx = next && next.num !== e.num ? next : nextDifferent(st, pos, e);
-    st.sax.show({ mode: 'note', cur: e, next: nx, showNext: !!nx && nx.abs - pos.abs <= lead + 1e-6, label: e.chord ? `${e.chord}` : '', tag: mode === 'sing' ? 'CANTA' : cur ? 'ARA' : 'PRIMERA NOTA' });
+    st.sax.show({ mode: 'note', cur: e, next: nx, showNext: !!nx && nx.abs - pos.abs <= lead + 1e-6, label: e.chord ? `${e.chord}` : '', tag: mode === 'sing' ? 'CANTA' : cur ? 'ARA' : 'PRIMERA NOTA', showRole: st.showRole });
   }
   updateSide(st, content, pos, cur ?? next);
   const bars = pos.bars.slice();
@@ -847,7 +858,7 @@ function frame(st) {
     const sg = st.plan?.(j);
     if (sg) bars[j] = { seg: sg, content: sg.mode === 'count' ? null : st.song.content(sg.k) };
   }
-  st.lane.draw({ ...pos, bars }, { voice: !!st.step.voice, marks: st.marks });
+  st.lane.draw({ ...pos, bars }, { voice: !!st.step.voice, marks: st.marks, labels: (st.helpLevel ?? 0) < 2 });
 }
 
 /** La primera nota amb un número diferent de l'actual (pot ser d'aquí a més d'un compàs). */
@@ -902,7 +913,7 @@ function showIdle(st) {
   const c0 = st.song.content(0);
   const e = c0.part.find((x) => !x.tied) ?? c0.part[0];
   if (st.kind === 'improv') { const ch = firstChord(st); st.sax.show({ mode: 'scale', notes: improvNotes(st, ch), key: `${ch.symbol}:${st.step.mode}`, label: `${ch.symbol} · ${st.step.mode === 'chord' ? 'notes de l\'acord' : 'pentatònica'}` }); }
-  else if (e) st.sax.show({ mode: 'note', cur: e, next: c0.part.find((x) => !x.tied && x.num !== e.num) ?? null, showNext: true, label: `Comença amb: ${e.num ?? e.label}${e.chord ? ` (${e.chord})` : ''}`, tag: 'PRIMERA NOTA' });
+  else if (e) st.sax.show({ mode: 'note', cur: e, next: c0.part.find((x) => !x.tied && x.num !== e.num) ?? null, showNext: true, label: `Comença amb: ${e.num ?? e.label}${e.chord ? ` (${e.chord})` : ''}`, tag: 'PRIMERA NOTA', showRole: st.showRole });
   else st.sax.clear();
   updateSide(st, null, { beat: 0 }, e);
   drawIdleLane(st);
