@@ -49,6 +49,10 @@ Els del document «Notació Saxo» de ROCKIN: `1` = Si · `2` = La (1+2) · `3` 
 - **«A cegues»**, l'últim pas de cada nivell: el mateix que acabes de fer, sense cap ajuda visual mentre toques. Amb el TravelSax, el joc compara el percentatge amb el del pas amb ajuda: si cau molt, encara depens de la pantalla.
 - **Pantalla senzilla** per defecte (⚙ Configuració): diagrama sense claus laterals ni de trins, el número i «ara ve»; sense el nom de la nota escrita ni el paper dins l'acord (el paper només als passos de nota propera). Els veredictes en text mentre toques estan apagats: el color a la pista i el resum del final.
 
+## Versió 4 · 11-11-2026
+
+«Què sé fer» amb tres pestanyes (A la banda · Com vas · Historial). «Com vas» comença per com t'estudies: per a cada estratègia que tries després de tocar, com t'ha anat l'intent següent.
+
 ## Versió 3 · 11-11-2026
 
 Capçalera comuna de les eines Rockin, fons clar, icones de línia en lloc d'emojis i el full de ruta amb l'aspecte dels pòsters Rockin.
