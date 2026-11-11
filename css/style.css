@@ -812,3 +812,47 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
 .tips > summary .ic { width: 18px; height: 18px; color: var(--accent); }
 .gsound .ic, .fs-btn .ic { width: 16px; height: 16px; }
 .next-card .pick-badge .ic { width: 26px; height: 26px; }
+
+/* «Què sé fer»: pestanyes A la banda · Com vas · Historial (Com vas comença per com t'estudies) */
+#v-skills { overflow: auto; }
+.qsf-tabs { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.qsf-tab { font: 700 13px Ubuntu, sans-serif; border: 1px solid var(--linia); background: #fff; color: var(--gris); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.qsf-tab[aria-selected="true"] { background: var(--tinta); border-color: var(--tinta); color: #fff; }
+.cami-panel .link { display: inline; text-decoration: underline; font-weight: 700; }
+.qsf-com { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.qsf-dreta { display: flex; flex-direction: column; gap: 14px; }
+.qsf-estrat h3, .qsf-dreta h3 { margin-top: 0; }
+.qsf-estrat h4 { margin: 16px 0 8px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--gris); }
+.qsf-ins { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.qsf-ins li { background: var(--fons); border-left: 4px solid var(--accent); border-radius: 6px; padding: 8px 11px; font-size: 14px; }
+.qsf-buit { background: var(--fons); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--gris); }
+.qsf-taula { display: flex; flex-direction: column; gap: 7px; }
+.qsf-row { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(80px, 1fr) 56px; gap: 10px; align-items: center; font-size: 14px; }
+.qsf-row .n { color: var(--gris); text-align: right; font-size: 12.5px; }
+.qsf-row b { text-align: right; font-size: 13px; }
+.qsf-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: #efebe3; }
+.qsf-bar i, .qsf-llegenda i { display: block; height: 100%; }
+.qsf-bar .g, .qsf-llegenda .g { background: var(--ok); }
+.qsf-bar .s, .qsf-llegenda .s { background: #c9c2b4; }
+.qsf-bar .w, .qsf-llegenda .w { background: var(--ko); }
+.qsf-llegenda { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--gris); margin: 8px 0 4px; }
+.qsf-llegenda span { display: inline-flex; align-items: center; gap: 5px; }
+.qsf-llegenda i { width: 10px; height: 10px; border-radius: 2px; }
+.qsf-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.qsf-kpi { background: #fff; border: 1px solid var(--linia); border-radius: 10px; padding: 8px 14px; }
+.qsf-kpi b { display: block; font: 700 24px Ubuntu, sans-serif; }
+.qsf-kpi span { color: var(--gris); font-size: 12px; }
+.qsf-recs { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.qsf-recs li { background: var(--fons); border: 1px solid var(--linia); border-radius: 8px; padding: 9px 11px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.qsf-recs p { margin: 0; font-size: 14px; }
+.qsf-hist table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.qsf-hist th, .qsf-hist td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--linia); vertical-align: top; }
+.qsf-hist th { font-size: 12px; color: var(--gris); font-weight: 700; }
+.qsf-niv { font-weight: 700; white-space: nowrap; }
+.qsf-niv.ok { color: var(--ok); } .qsf-niv.gairebe { color: #b07400; } .qsf-niv.no { color: var(--gris); }
+.qsf-fx { font-weight: 800; margin-left: 4px; } .qsf-fx.g { color: var(--ok); } .qsf-fx.w { color: var(--ko); } .qsf-fx.s { color: var(--gris); }
+@media (max-width: 900px) {
+  .qsf-com { grid-template-columns: 1fr; }
+  .qsf-tabs { margin-left: 0; }
+  .qsf-hist { overflow-x: auto; }
+}
