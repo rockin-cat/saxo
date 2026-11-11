@@ -484,8 +484,8 @@ main { grid-area: main; min-height: 0; min-width: 0; position: relative; display
 
 /* Pantalles petites: la navegació passa a baix i cada pantalla es desplaça sola */
 @media (max-width: 760px) {
-  body { grid-template-columns: minmax(0, 1fr); grid-template-rows: 52px minmax(0, 1fr) 62px; grid-template-areas: "top" "main" "rail"; }
-  body.no-player { grid-template-rows: 52px minmax(0, 1fr); }
+  body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) 62px; grid-template-areas: "top" "main" "rail"; }
+  body.no-player { grid-template-rows: auto minmax(0, 1fr); }
   .topbar { padding: 0 10px; gap: 8px; }
   .brand span, .song-pill small { display: none; }
   .brand img { height: 26px; }
@@ -855,4 +855,18 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
   .qsf-com { grid-template-columns: 1fr; }
   .qsf-tabs { margin-left: 0; }
   .qsf-hist { overflow-x: auto; }
+}
+
+/* ---- Mòbil: la capçalera creix si els botons no hi caben (no tapa la pantalla) ---- */
+@media (max-width: 760px) {
+  .top-right { flex-wrap: wrap; justify-content: flex-end; gap: 6px; padding: 6px 0; min-width: 0; }
+  .top-right .chip { padding-inline: 9px; }
+  .vh-text { flex: 1 1 220px; }
+  .guide-body { overflow: visible; }
+  .intro-ov { position: fixed; z-index: 50; padding: 12px; }
+  .neck-host { overflow-x: visible; margin-left: 0; margin-right: 0; }
+  .neck { min-width: 0; width: 100%; height: auto; }
+}
+@media (hover: none) and (pointer: coarse) {
+  kbd { display: none !important; }
 }
