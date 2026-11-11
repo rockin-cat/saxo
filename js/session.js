@@ -1,6 +1,7 @@
 // La pantalla de pràctica: escolta → la banda continua i el diagrama et guia → com ha anat.
 // També fa de joc d'afinació (nivell 7), de compositor (nivell 9) i d'improvisació (nivell 10).
 
+import { ic } from './icones.js';
 import * as player from './player.js';
 import { createSaxView } from './saxview.js';
 import { createLane } from './lane.js';
@@ -118,7 +119,7 @@ export function openSession(host, baseStep, ctx) {
           <small>${esc([levelText, ctx.crumb].filter(Boolean).join(' · '))}</small>
           <h2>${esc(step.titol)}</h2>
         </div>
-        <div class="vh-actions"><button type="button" class="btn btn-ghost btn-small help-btn" data-go="guide" title="Què vol dir cada cosa de la pantalla">Com es llegeix?</button><button type="button" class="btn btn-ghost btn-small fs-btn" data-fs title="Pantalla completa" aria-label="Pantalla completa">⛶</button></div>
+        <div class="vh-actions"><button type="button" class="btn btn-ghost btn-small help-btn" data-go="guide" title="Què vol dir cada cosa de la pantalla">Com es llegeix?</button><button type="button" class="btn btn-ghost btn-small fs-btn" data-fs title="Pantalla completa" aria-label="Pantalla completa">${ic('pantalla')}</button></div>
       </div>
       <div class="sess-grid">
         <div class="sess-main">
@@ -153,11 +154,11 @@ export function openSession(host, baseStep, ctx) {
           <div class="tuner" data-el="tuner" hidden></div>
           <div class="controls" data-el="controls">
             <div class="ctrl-main">
-              <button type="button" class="btn btn-ghost btn-big" data-act="listen">👂 Escolta</button>
-              <button type="button" class="btn btn-primary btn-big" data-act="play">${kind === 'sing' ? '🎤 Canta' : '▶ Toca'}</button>
+              <button type="button" class="btn btn-ghost btn-big" data-act="listen">Escolta</button>
+              <button type="button" class="btn btn-primary btn-big" data-act="play">${kind === 'sing' ? 'Canta' : '▶ Toca'}</button>
               <button type="button" class="btn btn-big btn-stop" data-act="stop" hidden>■ Atura</button>
               <span class="help-ind" data-el="helpind" title="El joc va retirant l'ajuda a mesura que et surt"></span>
-              <button type="button" class="btn btn-ghost btn-small opts-btn" data-act="opts" aria-expanded="false">⚙ Opcions</button>
+              <button type="button" class="btn btn-ghost btn-small opts-btn" data-act="opts" aria-expanded="false">Opcions</button>
             </div>
             <div class="ctrl-drawer" data-el="drawer" hidden>
             <div class="ctrl-opts">
@@ -167,7 +168,7 @@ export function openSession(host, baseStep, ctx) {
               <label class="toggle" title="Mentre toques tu, sona fluix el saxo del joc"><input type="checkbox" data-el="guide"> Guia sonora</label>
               <label class="toggle" title="Mentre toques tu, l'ajuda visual es va esvaint fins que ho fas sol"><input type="checkbox" data-el="fade"> Retira l'ajuda a poc a poc</label>
               <button type="button" class="btn btn-ghost btn-small" data-act="full">Escolta i toca seguit</button>
-              <button type="button" class="btn btn-ghost btn-small listen-btn" data-act="midi-dlg" title="Amb el TravelSax per USB o Bluetooth, el joc sent el que toques i et corregeix">🎷 Connecta el TravelSax</button>
+              <button type="button" class="btn btn-ghost btn-small listen-btn" data-act="midi-dlg" title="Amb el TravelSax per USB o Bluetooth, el joc sent el que toques i et corregeix">Connecta el TravelSax</button>
             </div>
             <div class="ctrl-opts ctrl-song" data-el="songbar"></div>
             </div>
@@ -246,10 +247,10 @@ function renderSongBar(st) {
     parts.push(`<label>Melodia <select data-el="gline">${lines.map((l, i) => `<option value="${i}"${cur === i ? ' selected' : ''}>${esc(l.nom)}</option>`).join('')}</select></label>`);
   }
   if (st.step.usesSong) {
-    parts.push(`<span class="song-chip">🎵 ${esc(st.step.usesSong)}</span><label class="toggle"><input type="checkbox" data-el="whole"${st.whole ? ' checked' : ''}> Cançó sencera</label>`);
+    parts.push(`<span class="song-chip">${esc(st.step.usesSong)}</span><label class="toggle"><input type="checkbox" data-el="whole"${st.whole ? ' checked' : ''}> Cançó sencera</label>`);
   } else if (st.step.songNote) parts.push(`<span class="muted small">${esc(st.step.songNote)}</span>`);
   else if (!store.workSong() && b.canco !== false && !b.custom && st.kind !== 'tune' && st.ctx.onChooseSong) {
-    parts.push('<button type="button" class="btn btn-ghost btn-small" data-act="choose-song">🎵 Tria la cançó amb què treballes</button>');
+    parts.push('<button type="button" class="btn btn-ghost btn-small" data-act="choose-song">Tria la cançó amb què treballes</button>');
   }
   bar.innerHTML = parts.join('');
   bar.hidden = !parts.length;
@@ -434,10 +435,10 @@ function finished(st, natural) {
 function updateMidiUi(st) {
   const on = midi.isOn();
   const b = $('[data-act="midi-dlg"]', st.root);
-  if (b) { b.textContent = on ? '🎷 TravelSax connectat' : '🎷 Connecta el TravelSax'; b.classList.toggle('on', on); }
+  if (b) { b.textContent = on ? 'TravelSax connectat' : 'Connecta el TravelSax'; b.classList.toggle('on', on); }
   st.el('lhud').hidden = !(on || midi.settings().keys) || st.kind === 'sing' || st.kind === 'tune';
   const chip = document.getElementById('listen-chip');
-  if (chip) { chip.classList.toggle('on', on); chip.textContent = on ? '🎷 TravelSax connectat' : '🎷 Connecta el TravelSax'; }
+  if (chip) { chip.classList.toggle('on', on); chip.textContent = on ? 'TravelSax connectat' : 'Connecta el TravelSax'; }
 }
 
 function resetDots(st) {
@@ -654,7 +655,7 @@ function applyAutoHelp(st, level = autoLevel(st)) {
 function showHelpInd(st) {
   const el = st.el('helpind');
   if (!el) return;
-  if (st.blind) { el.innerHTML = '<span class="small">🙈 A cegues: sense ajuda visual</span>'; return; }
+  if (st.blind) { el.innerHTML = '<span class="small">A cegues: sense ajuda visual</span>'; return; }
   if (!st.auto) { el.innerHTML = st.kind === 'sing' ? '' : '<span class="muted small">Ajuda: a mà (Opcions)</span>'; return; }
   const l = st.autoLevel ?? 0;
   el.innerHTML = `<span class="hi-dots">${[0, 1, 2].map((i) => `<i class="${i <= l ? 'on' : ''}"></i>`).join('')}</span><span class="small">${AUTO_TXT[l]}</span>`;
@@ -886,7 +887,7 @@ function updateSide(st, content, pos, ev) {
   if (host.dataset.key !== key) {
     host.dataset.key = key;
     host.innerHTML = '';
-    if (step.genLine) host.append(h(`<div class="genline">🎷 Melodia del Generador<b>${esc(step.genLine)}</b><small>La que ha escrit el professorat per a aquesta cançó${step.lineBars ? ` (${step.lineBars} compassos)` : ''}. Els números són els de la digitació ROCKIN.</small></div>`));
+    if (step.genLine) host.append(h(`<div class="genline">Melodia del Generador<b>${esc(step.genLine)}</b><small>La que ha escrit el professorat per a aquesta cançó${step.lineBars ? ` (${step.lineBars} compassos)` : ''}. Els números són els de la digitació ROCKIN.</small></div>`));
     for (const id of cards) {
       const c = cardById(id);
       if (!c) continue;
@@ -935,8 +936,8 @@ function setupComposer(st) {
   const deck = rhythmDeck(M);
   const render = () => {
     box.innerHTML = `<div class="composer-head"><h3>La teva composició</h3>
-      <button type="button" class="btn btn-ghost btn-small" data-c="random">🎲 Sorprèn-me</button>
-      <button type="button" class="btn btn-ghost btn-small" data-c="save">💾 Desa-la a les meves cançons</button></div>
+      <button type="button" class="btn btn-ghost btn-small" data-c="random">Sorprèn-me</button>
+      <button type="button" class="btn btn-ghost btn-small" data-c="save">Desa-la a les meves cançons</button></div>
       <div class="composer-bars">${st.compose.map((b, i) => `
         <div class="cbar">
           <div class="cbar-chord">${esc(st.bars[i % st.bars.length].map((s) => s.chord.symbol).join(' '))}</div>
@@ -995,7 +996,7 @@ function setupTuner(st) {
       <p class="muted" data-t="intro">Sona una nota de referència i després el saxo. Decideix què faries amb el broquet.</p>
       <div class="row"><button type="button" class="btn btn-primary btn-big" data-t="start">▶ Comença</button></div>
       <div class="tune-round" data-t="round" hidden>
-        <div class="tune-head"><span data-t="num"></span><button type="button" class="btn btn-ghost btn-small" data-t="again">🔁 Torna a escoltar</button></div>
+        <div class="tune-head"><span data-t="num"></span><button type="button" class="btn btn-ghost btn-small" data-t="again">Torna a escoltar</button></div>
         <div class="tune-choices">
           <button type="button" class="tune-btn wide" data-ans="alt"><b>Va alt</b><small>treu una mica el broquet</small></button>
           <button type="button" class="tune-btn wide" data-ans="ok"><b>Afinat</b><small>deixa-ho com està</small></button>

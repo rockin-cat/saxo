@@ -58,7 +58,7 @@ export function renderGuide(host, instId, { onDone } = {}) {
   }
 
   const box = (title, html) => `<div class="gbox"><h3>${esc(title)}</h3>${html}</div>`;
-  const tryIt = (html) => `<div class="gtry"><b>🎷 Prova-ho al saxo</b>${html}</div>`;
+  const tryIt = (html) => `<div class="gtry"><b>Prova-ho al saxo</b>${html}</div>`;
   const fig = (num, cap = '') => `<figure class="gfig"><div class="sv-mini">${SAXO.svgDiagrama(num, { ample: 96 })}</div><figcaption><b>${esc(num)}</b> ${esc(cap)}</figcaption></figure>`;
 
   function pageDiagram(el) {
@@ -101,7 +101,7 @@ export function renderGuide(host, instId, { onDone } = {}) {
   function pageMidi(el) {
     el.innerHTML = `<div class="gcols"><div>
       <p class="glead">Si connectes el <b>TravelSax</b> (per USB-C o Bluetooth), el joc sent cada nota que toques: et diu si era la bona, si anava aviat o tard, si era l'altra octava i (al nivell 3) si bufaves prou fort o fluix.</p>
-      ${box('Com es connecta', `<ol><li>Endolla el TravelSax a l'ordinador amb el cable USB-C (o aparella'l per Bluetooth MIDI).</li><li>Clica <b>🎷 Connecta el TravelSax</b> a dalt i dona permís al navegador (Chrome o Edge).</li><li>Clica <b>Calibra</b> i toca un <b>1 (Si)</b>: així el joc sap quina nota envia el TravelSax.</li><li>Posa't els auriculars al TravelSax, o marca «Sentir el saxo per l'ordinador».</li></ol>`)}
+      ${box('Com es connecta', `<ol><li>Endolla el TravelSax a l'ordinador amb el cable USB-C (o aparella'l per Bluetooth MIDI).</li><li>Clica <b>Connecta el TravelSax</b> a dalt i dona permís al navegador (Chrome o Edge).</li><li>Clica <b>Calibra</b> i toca un <b>1 (Si)</b>: així el joc sap quina nota envia el TravelSax.</li><li>Posa't els auriculars al TravelSax, o marca «Sentir el saxo per l'ordinador».</li></ol>`)}
       ${box('Sense TravelSax', `<p>També pots tocar amb el saxo de veritat i marcar tu com ha anat. I per provar el joc hi ha un teclat de prova: ${esc(KEY_HELP)}</p>`)}
       </div></div>`;
   }

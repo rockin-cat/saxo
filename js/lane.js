@@ -29,7 +29,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
     const c = ctx2;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.clearRect(0, 0, w, h);
-    c.fillStyle = '#141b2b';
+    c.fillStyle = '#fbfaf7';
     c.fillRect(0, 0, w, h);
     if (!pos) return;
     const { M } = pos.song;
@@ -48,24 +48,24 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
       if (x0 > w + 10) break;
       // fons del compàs segons el moment
       const mode = bar?.seg?.mode;
-      c.fillStyle = mode === 'play' || mode === 'answer' ? 'rgba(255,255,255,0.035)' : mode === 'sing' ? 'rgba(154,209,255,0.06)' : mode === 'count' ? 'rgba(253,190,16,0.06)' : 'rgba(0,0,0,0)';
+      c.fillStyle = mode === 'play' || mode === 'answer' ? 'rgba(31,30,28,0.035)' : mode === 'sing' ? 'rgba(154,209,255,0.06)' : mode === 'count' ? 'rgba(253,190,16,0.06)' : 'rgba(0,0,0,0)';
       c.fillRect(x0, 0, B * ppb, h);
       // línies de pulsació i subdivisió
       for (let b = 0; b < B; b += M.pulseLen / M.sub) {
         const x = X(i * B + b);
         const strong = Math.abs(b % M.pulseLen) < 1e-6;
-        c.strokeStyle = b === 0 ? 'rgba(255,255,255,0.45)' : strong ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.06)';
+        c.strokeStyle = b === 0 ? 'rgba(31,30,28,0.45)' : strong ? 'rgba(31,30,28,0.16)' : 'rgba(31,30,28,0.06)';
         c.lineWidth = b === 0 ? 2 : 1;
         c.beginPath(); c.moveTo(x, 30); c.lineTo(x, h); c.stroke();
         if (strong) {
-          c.fillStyle = 'rgba(255,255,255,0.28)';
+          c.fillStyle = 'rgba(31,30,28,0.28)';
           c.font = '600 11px Ubuntu, sans-serif';
           c.fillText(String(Math.round(b / M.pulseLen) + 1), x + 3, 42);
         }
       }
       if (!bar) continue;
       if (mode && MODE_TEXT[mode]) {
-        c.fillStyle = mode === 'play' || mode === 'answer' ? color : 'rgba(255,255,255,0.45)';
+        c.fillStyle = mode === 'play' || mode === 'answer' ? color : 'rgba(31,30,28,0.45)';
         c.font = '700 10px Ubuntu, sans-serif';
         c.fillText(MODE_TEXT[mode], x0 + 4, h - 6 - (voice ? 26 : 0));
       }
@@ -79,7 +79,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
       }
       // nom de la part (estructura de la cançó)
       if (content.bar.part) {
-        c.fillStyle = '#fdbe10';
+        c.fillStyle = '#e0a800';
         c.font = '700 11px Ubuntu, sans-serif';
         const tw = c.measureText(content.bar.part.toUpperCase()).width;
         c.fillRect(x0 + 2, 2, tw + 10, 15);
@@ -89,7 +89,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
       // acords
       for (const seg of content.bar) {
         const x = X(i * B + seg.start * B);
-        c.fillStyle = '#fff';
+        c.fillStyle = '#1f1e1c';
         c.font = '700 16px Ubuntu, sans-serif';
         c.fillText(seg.chord.symbol, x + 6, content.bar.part && seg.start === 0 ? rowChord + 10 : rowChord);
       }
@@ -104,14 +104,14 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
           if (e.kind === 'strum') arrow(c, x, rowEv, e.dir, e.ghost, color, len);
           else if (e.tied) tie(c, x, rowEv, len);
           else bubble(c, x, rowEv, labels ? e.label : '', color, len, labels ? e.role : '');
-          if (e.dyn && !e.tied) { c.fillStyle = '#fdbe10'; c.font = 'italic 700 14px Georgia, serif'; c.fillText(e.dyn, x + 8, rowEv - 24); }
+          if (e.dyn && !e.tied) { c.fillStyle = '#e0a800'; c.font = 'italic 700 14px Georgia, serif'; c.fillText(e.dyn, x + 8, rowEv - 24); }
           c.globalAlpha = 1;
         }
       }
       if (voice) {
         for (const v of content.voice) {
           const x = X(i * B + v.beat);
-          c.fillStyle = v.speak ? '#fdbe10' : '#9ad1ff';
+          c.fillStyle = v.speak ? '#e0a800' : '#2f86c9';
           c.font = `${v.speak ? 700 : 600} 15px Ubuntu, sans-serif`;
           c.fillText(v.text, x + 2, rowVoice);
           if (v.sing) { c.fillStyle = 'rgba(154,209,255,0.25)'; c.fillRect(x, rowVoice + 5, Math.max(4, v.dur * ppb - 4), 3); }
@@ -120,11 +120,11 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
     }
     // el que ha sentit el joc: un anell de color al cop que tocava i un punt on has tocat tu
     if (marks?.length) {
-      const COL = { ok: '#44d17a', mid: '#ffb347', bad: '#ff5a5a' };
+      const COL = { ok: '#1f9d55', mid: '#f08c00', bad: '#d64545' };
       for (const m of marks) {
         const x = X(m.abs);
         if (x < -20 || x > w + 20) continue;
-        c.strokeStyle = c.fillStyle = COL[m.cls] ?? '#fff';
+        c.strokeStyle = c.fillStyle = COL[m.cls] ?? '#1f1e1c';
         if (m.ring) {
           c.lineWidth = 3;
           c.beginPath(); c.arc(x + 8, rowEv, 21, 0, Math.PI * 2); c.stroke();
@@ -136,10 +136,10 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
       }
     }
     // la línia d'ara
-    c.strokeStyle = '#fdbe10';
+    c.strokeStyle = '#e0a800';
     c.lineWidth = 3;
     c.beginPath(); c.moveTo(nowX, 26); c.lineTo(nowX, h); c.stroke();
-    c.fillStyle = '#fdbe10';
+    c.fillStyle = '#e0a800';
     c.beginPath(); c.moveTo(nowX - 7, 26); c.lineTo(nowX + 7, 26); c.lineTo(nowX, 34); c.fill();
   }
 
@@ -148,7 +148,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
 
 function arrow(c, x, y, dir, ghost, color, len) {
   const hgt = 34;
-  c.strokeStyle = ghost ? 'rgba(255,255,255,0.28)' : color;
+  c.strokeStyle = ghost ? 'rgba(31,30,28,0.28)' : color;
   c.fillStyle = c.strokeStyle;
   c.lineWidth = ghost ? 2 : 4;
   const a = dir === 'D' ? y - hgt / 2 : y + hgt / 2;
@@ -157,14 +157,14 @@ function arrow(c, x, y, dir, ghost, color, len) {
   const s = dir === 'D' ? 1 : -1;
   c.beginPath(); c.moveTo(x + 1, b - 9 * s); c.lineTo(x + 15, b - 9 * s); c.lineTo(x + 8, b + 2 * s); c.fill();
   if (!ghost && len > 24) {
-    c.fillStyle = 'rgba(255,255,255,0.08)';
+    c.fillStyle = 'rgba(31,30,28,0.08)';
     c.fillRect(x + 16, y - 3, len - 16, 6);
   }
 }
 
 function bubble(c, x, y, label, color, len, role) {
   const r = 16;
-  c.fillStyle = 'rgba(255,255,255,0.1)';
+  c.fillStyle = 'rgba(31,30,28,0.1)';
   c.fillRect(x + r, y - 4, Math.max(0, len - r), 8);
   c.fillStyle = color;
   c.beginPath(); c.arc(x + r, y, r, 0, Math.PI * 2); c.fill();
@@ -176,10 +176,10 @@ function bubble(c, x, y, label, color, len, role) {
     c.fillText(s, x + r, y + 5);
     c.textAlign = 'left';
   }
-  if (role) { c.fillStyle = 'rgba(255,255,255,0.55)'; c.font = '600 10px Ubuntu, sans-serif'; c.fillText(role, x + r + 12, y + 22); }
+  if (role) { c.fillStyle = 'rgba(31,30,28,0.55)'; c.font = '600 10px Ubuntu, sans-serif'; c.fillText(role, x + r + 12, y + 22); }
 }
 /** La continuació d'una nota que ve del compàs anterior (no es torna a atacar). */
 function tie(c, x, y, len) {
-  c.fillStyle = 'rgba(255,255,255,0.1)';
+  c.fillStyle = 'rgba(31,30,28,0.1)';
   c.fillRect(x, y - 4, Math.max(4, len), 8);
 }

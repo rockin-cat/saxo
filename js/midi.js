@@ -175,7 +175,7 @@ export function openDialog({ onChange } = {}) {
   const render = () => {
     const on = isOn();
     dlg.innerHTML = `<form method="dialog">
-      <h2>🎷 El teu TravelSax</h2>
+      <h2>El teu TravelSax</h2>
       <p class="muted small">Connecta'l per USB-C (el més segur a l'aula) o per Bluetooth MIDI. Funciona amb Chrome i Edge. Al TravelSax, deixa el so apagat o posa't els auriculars: el joc només necessita les notes.</p>
       <div class="midi-row">
         <button type="button" class="btn ${on ? 'btn-ghost' : 'btn-primary'}" data-m="connect">${on ? '✓ Connectat' : 'Connecta'}</button>

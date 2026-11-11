@@ -1,6 +1,7 @@
 // ROCKIN · Saxo — pantalles: inici, la teva cançó, full de ruta, nivell, cartes, què sé fer i pràctica.
 // Sempre es treballa a partir d'una cançó: tots els nivells fan servir la mateixa roda d'acords.
 
+import { ic, icona } from './icones.js';
 import * as store from './store.js';
 import { LEVELS, allSteps, stepFits } from './levels.js';
 import { INSTRUMENTS } from './instruments.js';
@@ -74,7 +75,7 @@ const pathEndHtml = () => `<div class="panel path-end"><b>Has acabat el camí.</
 
 const saxSvg = (c) => `<svg viewBox="0 0 40 60" width="34" height="50"><path d="M14 4c0 0 3 0 6 2l2 14c1 6 1 12-2 18-2 4-6 8-8 12 0 4 3 7 8 7 6 0 10-4 10-8h-4c0 2-2 4-6 4-2 0-4-1-4-3 2-4 6-8 8-12 4-7 4-14 3-21l-2-12c-3-3-7-3-9-3z" fill="${c}"/><circle cx="19" cy="18" r="2" fill="#2b3446"/><circle cx="20" cy="25" r="2" fill="#2b3446"/><circle cx="21" cy="32" r="2" fill="#2b3446"/></svg>`;
 
-const LINES_TEXT = (ws) => (ws?.saxo?.length ? `🎷 ${ws.saxo.length === 1 ? 'una melodia' : `${ws.saxo.length} melodies`} del Generador` : '');
+const LINES_TEXT = (ws) => (ws?.saxo?.length ? `${ws.saxo.length === 1 ? 'una melodia' : `${ws.saxo.length} melodies`} del Generador` : '');
 
 // ---- Inici ------------------------------------------------------------------------------------------------------
 
@@ -129,7 +130,7 @@ function renderHome() {
           <div class="home-struct">${structureHtml(ws, { compact: true })}</div>
         </div>` : `
         <button type="button" class="next-card empty" data-go="song">
-          <span class="pick-badge">♫</span>
+          <span class="pick-badge">${ic('nota')}</span>
           <span class="next-text"><small>Sempre s'aprèn a partir d'una cançó</small><b>Tria la cançó amb què treballes</b>
             <em>Del Llibre ROCKIN, de la biblioteca compartida (amb les melodies de saxo del Generador) o escrivint-ne els acords.</em></span>
           <span class="next-go">Tria-la</span>
@@ -155,7 +156,6 @@ function levelLine(instId) {
 
 // ---- Full de ruta (com el pòster) ----------------------------------------------------------------------------
 
-const LEVEL_ICONS = ['♫', '⎍', '🔊', '🎤', '🖐', '👅', '🎚', '♬', '✒', '✎'];
 
 function renderMap() {
   const i = inst();
@@ -173,13 +173,13 @@ function renderMap() {
       <div class="poster-grid">
         ${levels.map((l, k) => { const p = levelProgress(l); return `
           <button type="button" class="ptile${p.total && p.done === p.total ? ' done' : ''}${nx?.level.n === l.n ? ' cur' : ''}" data-level="${l.n}">
-            <span class="ptile-top"><span class="pick-badge">${l.n}</span><span class="ptile-icon">${LEVEL_ICONS[k]}</span></span>
+            <span class="ptile-top"><span class="pick-badge">${l.n}</span><span class="ptile-icon">${icona(l.icona)}</span></span>
             <b>${esc(l.titol)}</b><small>${esc(l.sub)}</small>
             <span class="ptile-foot"><span class="pbar"><i style="width:${p.total ? (100 * p.done) / p.total : 0}%"></i></span><em>${p.done} de ${p.total}</em></span>
           </button>`; }).join('')}
       </div>
       ${store.workSong() && !nx ? pathEndHtml() : ''}
-      <div class="poster-foot"><span>EnDirecte: Música als Instituts</span><em>Pugem de nivell?</em></div>
+      <div class="poster-foot"><img class="poster-logo" src="assets/brand/rockin-wordmark-dark.png" alt="Rockin"><em>Pugem de nivell?</em></div>
     </div>`;
 }
 
@@ -312,7 +312,7 @@ function renderSong(msg = '') {
           ${structureHtml(draft)}
           <div class="row">
             ${isWork ? '<span class="song-ok">✓ És la cançó amb què treballes</span><button type="button" class="btn btn-primary btn-big" data-go="map">Ves al full de ruta →</button>'
-              : '<button type="button" class="btn btn-primary btn-big" data-c="worksong">🎵 Treballa el full de ruta amb aquesta cançó</button>'}
+              : '<button type="button" class="btn btn-primary btn-big" data-c="worksong">Treballa el full de ruta amb aquesta cançó</button>'}
           </div>
         </div>` : `
         <form class="panel cform" id="cform">
@@ -363,7 +363,7 @@ async function renderSongTab() {
   if (songTab === 'meves') {
     const mine = store.songs();
     for (const s of mine) songIndex.set(s.id, { ...s, font: 'meves' });
-    box.innerHTML = mine.length ? `<ul class="songs">${mine.map((s) => songRow('data-ksong', s.id, s.titol || 'Sense títol', `${s.metre} · ${s.prog.replace(/\[[^\]]*\]\s*/g, '').split('|').slice(0, 4).join('|')}`, `<button type="button" class="icon-btn" data-del="${s.id}" title="Esborra">🗑</button>`)).join('')}</ul>` : '<p class="muted small">Les cançons que escriguis surten aquí.</p>';
+    box.innerHTML = mine.length ? `<ul class="songs">${mine.map((s) => songRow('data-ksong', s.id, s.titol || 'Sense títol', `${s.metre} · ${s.prog.replace(/\[[^\]]*\]\s*/g, '').split('|').slice(0, 4).join('|')}`, `<button type="button" class="icon-btn" data-del="${s.id}" title="Esborra" aria-label="Esborra">${ic('esborra')}</button>`)).join('')}</ul>` : '<p class="muted small">Les cançons que escriguis surten aquí.</p>';
   } else if (songTab === 'llibre') {
     box.innerHTML = '<p class="muted small">Carregant…</p>';
     const list = await songbook();
@@ -372,7 +372,7 @@ async function renderSongTab() {
     const groups = [[0, 'Nivell 0'], [1, 'Nivell 1'], [2, 'Nivell 2'], [3, 'Nivell 3'], [null, 'Altres temes del Llibre']]
       .map(([n, t]) => [t, list.filter((s) => (s.nivell ?? null) === n)]).filter(([, l]) => l.length);
     box.innerHTML = `<p class="muted small">Les cançons de la biblioteca del Generador, obertes per a tothom (sense codi). Les melodies de saxo arriben per la biblioteca compartida (amb el codi del professorat) o per un fitxer del Generador.</p>
-      ${groups.map(([t, l]) => `<h4>${esc(t)}</h4><ul class="songs">${l.map((s) => songRow('data-ksong', s.id, s.titol, `${s.artista} · ${s.metre} · ${s.tempo} bpm${s.saxo?.length ? ' · 🎷 melodia' : ''}`)).join('')}</ul>`).join('')}`;
+      ${groups.map(([t, l]) => `<h4>${esc(t)}</h4><ul class="songs">${l.map((s) => songRow('data-ksong', s.id, s.titol, `${s.artista} · ${s.metre} · ${s.tempo} bpm${s.saxo?.length ? ' · melodia' : ''}`)).join('')}</ul>`).join('')}`;
   } else if (songTab === 'teclat') {
     const own = keyboardSongs();
     for (const s of [...WHEELS, ...own]) songIndex.set(s.id, s);
@@ -420,7 +420,7 @@ async function openLibrary(code, quiet = false) {
   try {
     libEntries = await listLibrary(code);
     saveCode(code);
-    box.innerHTML = libEntries.length ? `<ul class="songs">${libEntries.slice(0, 80).map((s) => `<li><button type="button" class="link" data-lib="${esc(s.id)}"><b>${esc(s.titol || s.nom)}</b><small>${esc(s.artista || '')}${(s.instruments ?? []).includes('saxo') ? ' · 🎷 melodia de saxo' : ''}</small></button></li>`).join('')}</ul>` : '<p class="muted small">La biblioteca és buida.</p>';
+    box.innerHTML = libEntries.length ? `<ul class="songs">${libEntries.slice(0, 80).map((s) => `<li><button type="button" class="link" data-lib="${esc(s.id)}"><b>${esc(s.titol || s.nom)}</b><small>${esc(s.artista || '')}${(s.instruments ?? []).includes('saxo') ? ' · melodia de saxo' : ''}</small></button></li>`).join('')}</ul>` : '<p class="muted small">La biblioteca és buida.</p>';
   } catch (e) {
     box.innerHTML = quiet ? '' : `<p class="err">${esc(errorText(e))}</p>`;
   }
@@ -473,13 +473,13 @@ function renderSkills() {
     </div>
     ${song && !nx ? pathEndHtml() : ''}
     <div class="panel banda">
-      <h3>🎷 A la banda ja pots…</h3>
+      <h3>A la banda ja pots…</h3>
       ${unlocked.length ? `<ul>${unlocked.map((x) => `<li><span class="pick-mini" style="--c:${i.color}">${x.level.n}</span>${esc(x.banda)}</li>`).join('')}</ul>` : '<p class="muted">Encara res: comença pel nivell 1 i, quan un pas et surti, marca «A prop» o «Ja ho tens!».</p>'}
     </div>
     <div class="skills-grid">
       ${levels.map((x) => `
         <div class="skill ${x.done ? 'done' : x.unlocked ? 'on' : ''}" style="--c:${i.color}">
-          <div class="skill-head"><span class="pick-badge">${x.level.n}</span><div><b>${esc(x.level.titol)}</b><small>${x.doneCount} de ${x.steps.length} passos</small></div><span class="skill-state">${x.done ? '✓' : x.unlocked ? '' : '🔒'}</span></div>
+          <div class="skill-head"><span class="pick-badge">${x.level.n}</span><div><b>${esc(x.level.titol)}</b><small>${x.doneCount} de ${x.steps.length} passos</small></div><span class="skill-state">${x.done ? '✓' : x.unlocked ? '' : ic('cadenat')}</span></div>
           ${x.ok.length || x.almost.length ? `<ul class="skill-steps">${x.ok.map((p) => `<li>${pill('ok')} ${esc(p.titol)}</li>`).join('')}${x.almost.map((p) => `<li class="almost">${pill('gairebe')} ${esc(p.titol)}</li>`).join('')}</ul>` : ''}
           ${x.cards.length ? `<div class="skill-cards">${x.cards.map((id) => `<img src="${cardById(id)?.img}" alt="Carta ${esc(id)}" title="Carta ${esc(id)}">`).join('')}</div>` : ''}
           <p class="skill-banda">${esc(x.banda)}</p>
@@ -575,7 +575,7 @@ function midiChip() {
   const c = $('#listen-chip');
   const on = midi.isOn();
   c.classList.toggle('on', on);
-  c.textContent = on ? '🎷 TravelSax connectat' : '🎷 Connecta el TravelSax';
+  c.textContent = on ? 'TravelSax connectat' : 'Connecta el TravelSax';
   const sb = document.querySelector('#v-session [data-act="midi-dlg"]');
   if (sb) { sb.classList.toggle('on', on); sb.textContent = c.textContent; }
 }
