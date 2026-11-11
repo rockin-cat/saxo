@@ -17,6 +17,7 @@ import { summary } from './skills.js';
 import { renderGuide, closeGuide } from './guide.js';
 import { reached, pill, gapText } from './assoliment.js';
 import { decided, observations, lastDecisions, MIN_DECISIONS } from './autoregulacio.js';
+import { tabsHtml, comVasHtml, historialHtml } from './quesefer.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -455,16 +456,29 @@ function songClick(b) {
 
 // ---- Què sé fer ----------------------------------------------------------------------------------------------------
 
-function renderSkills() {
+let skillsTab = 'banda';
+function renderSkills(tab = skillsTab) {
+  skillsTab = tab;
   const i = inst();
   const v = $('#v-skills');
   const { levels, song } = summary(i.id);
   const unlocked = levels.filter((x) => x.unlocked);
   const nx = nextStep(i.id);
-  v.innerHTML = `
+  const headHtml = `
     <div class="view-head">
-      <div class="vh-text"><h2>Què sé fer</h2><p class="muted">El que has desbloquejat al joc i què vol dir quan toques amb la teva banda.</p></div>
-      <div class="vh-actions"><button type="button" class="btn btn-ghost btn-small" data-c="print">Imprimeix</button></div></div>
+      <div class="vh-text"><h2>Què sé fer</h2></div>
+      ${tabsHtml(tab)}
+      <div class="vh-actions"><button type="button" class="btn btn-ghost btn-small" data-c="print">Imprimeix</button></div></div>`;
+  if (tab !== 'banda') {
+    const title = (id) => stepTitle(i.id, id);
+    const steps = levels.flatMap((x) => x.steps);
+    v.innerHTML = headHtml + (tab === 'com'
+      ? comVasHtml({ title, instId: i.id, total: steps.length, fets: levels.reduce((a, x) => a + x.ok.length, 0),
+        next: nx ? { id: nx.step.id, text: `Nivell ${nx.level.n} · ${nx.step.titol}` } : null })
+      : historialHtml({ title }));
+    return;
+  }
+  v.innerHTML = `${headHtml}
     <div class="skills-top panel" style="--c:${i.color}">
       <div><small class="muted">Cançó</small><b>${esc(song?.titol ?? '—')}</b></div>
       <div><small class="muted">Saxo</small><b>${esc(i.nom)}</b></div>
@@ -498,13 +512,11 @@ function stepTitle(instId, id) {
 function pathHtml(instId) {
   const n = decided().length;
   if (n < MIN_DECISIONS) {
-    return `<div class="panel cami-panel"><h3>Com tries el teu camí</h3><p class="muted">Després de cada intent tries què vols fer: baixar el tempo, posar o treure la guia, tornar a un pas anterior, passar al següent… Quan hagis pres unes quantes decisions (${n} de ${MIN_DECISIONS}), aquí veuràs quines t'han funcionat.</p></div>`;
+    return `<div class="panel cami-panel"><h3>Com t’estudies</h3><p class="muted">Després de cada intent tries què vols fer: baixar el tempo, posar o treure la guia, tornar a un pas anterior, passar al següent… Quan hagis pres unes quantes decisions (${n} de ${MIN_DECISIONS}), a la pestanya <button type="button" class="link" data-qtab="com">Com vas</button> veuràs quines t'han funcionat.</p></div>`;
   }
-  const last = lastDecisions((id) => stepTitle(instId, id));
-  return `<div class="panel cami-panel"><h3>Com tries el teu camí</h3>
-    <ul class="cami-obs">${observations().map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-    <details class="cami-last"><summary>Les teves últimes decisions</summary>
-      <ul>${last.map((x) => `<li>${x.html}</li>`).join('')}</ul></details></div>`;
+  return `<div class="panel cami-panel"><h3>Com t’estudies</h3>
+    <ul class="qsf-ins"><li>${esc(observations()[0])}</li></ul>
+    <p class="muted small">Com et van les estratègies que tries per practicar: a la pestanya <button type="button" class="link" data-qtab="com">Com vas</button>.</p></div>`;
 }
 
 // ---- Navegació -------------------------------------------------------------------------------------------------
@@ -539,6 +551,7 @@ document.addEventListener('click', (ev) => {
   }
   if (b.dataset.player) { store.setCurrent(b.dataset.player); Object.assign(draft, { prog: '' }); updatedNote = ''; renderHome(); applyAccent(); refreshWorkSong(); return; }
   if (b.dataset.c === 'print') { window.print(); return; }
+  if (b.dataset.qtab) { renderSkills(b.dataset.qtab); return; }
   const go = b.dataset.go;
   if (go === 'who') { store.setCurrent(null); renderHome(); applyAccent(); return; }
   if (go === 'home') { renderHome(); show('home'); return; }
