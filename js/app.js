@@ -4,7 +4,7 @@
 import { ic, icona } from './icones.js';
 import * as store from './store.js';
 import { LEVELS, allSteps, stepFits } from './levels.js';
-import { INSTRUMENTS } from './instruments.js';
+import { INSTRUMENTS, chordName, semi } from './instruments.js';
 import { openSession, closeSession } from './session.js';
 import { BINARI, TERNARI, MELODIC, cardById, cardMetre } from './data/cartes.js';
 import { METRES, parseProgression } from './theory.js';
@@ -13,6 +13,9 @@ import { savedCode, saveCode, listLibrary, loadLibrarySong, songFromLibrary, err
 import * as midi from './midi.js';
 import { songbook, WHEELS, keyboardSongs, mapStyle, sameTitle } from './songs.js';
 import { structureHtml } from './songview.js';
+
+/** Els noms dels acords per al saxofonista, a l'estructura de la cançó (si no s'ha triat veure només els de la banda). */
+const saxNames = () => { if (store.settings().chordsBand) return null; const i = INSTRUMENTS[store.instrumentOf()]; return { name: (s) => chordName(i, s), semi: semi(i), curt: i.nom.toLowerCase() }; };
 import { summary } from './skills.js';
 import { renderGuide, closeGuide } from './guide.js';
 import { reached, pill, gapText } from './assoliment.js';
@@ -128,7 +131,7 @@ function renderHome() {
           <div class="song-head"><div><small class="muted">La cançó amb què treballes</small><h2>${esc(ws.titol)}</h2>
             <p class="song-meta">${[ws.artista, ws.metre, `${ws.tempo} bpm`, LINES_TEXT(ws)].filter(Boolean).map(esc).join(' · ')}</p></div>
             <button type="button" class="btn btn-ghost btn-small" data-go="song">Canvia</button></div>
-          <div class="home-struct">${structureHtml(ws, { compact: true })}</div>
+          <div class="home-struct">${structureHtml(ws, { compact: true, sax: saxNames() })}</div>
         </div>` : `
         <button type="button" class="next-card empty" data-go="song">
           <span class="pick-badge">${ic('nota')}</span>
@@ -311,7 +314,7 @@ function renderSong(msg = '') {
             <p class="song-meta">${esc(draft.metre)} · ${esc(draft.tempo)} bpm · ${esc(STYLES[draft.estil]?.nom ?? '')}${draft.saxo?.length ? ` · ${esc(LINES_TEXT(draft))}` : ''}</p></div>
           ${draft.saxo?.length ? `<p class="muted small">Melodies: ${draft.saxo.map((l) => `<b>${esc(l.nom)}</b> (${esc(l.compassos)} compassos, saxo ${esc(l.saxo)})`).join(' · ')}. Amb melodia, el full de ruta té els passos «La melodia de la cançó».</p>` : '<p class="muted small">Aquesta cançó no porta cap melodia de saxo del Generador: es treballarà amb les notes dels acords (fonamental i nota propera). Si el professorat hi escriu la melodia al Generador, apareixeran els passos de melodia.</p>'}
             <button type="button" class="btn btn-ghost btn-small" data-c="edit">✎ Edita</button></div>
-          ${structureHtml(draft)}
+          ${structureHtml(draft, { sax: saxNames() })}
           <div class="row">
             ${isWork ? '<span class="song-ok">✓ És la cançó amb què treballes</span><button type="button" class="btn btn-primary btn-big" data-go="map">Ves al full de ruta →</button>'
               : '<button type="button" class="btn btn-primary btn-big" data-c="worksong">Treballa el full de ruta amb aquesta cançó</button>'}
@@ -328,7 +331,7 @@ function renderSong(msg = '') {
             <label>Tempo <input type="number" name="tempo" min="40" max="200" value="${esc(draft.tempo)}"></label>
             <label>Estil <select name="estil">${styles.map((s) => `<option value="${s.id}"${s.id === draft.estil ? ' selected' : ''}>${esc(s.nom)}</option>`).join('')}</select></label>
           </div>
-          <div class="struct-preview" id="struct-preview">${has ? structureHtml(draft) : ''}</div>
+          <div class="struct-preview" id="struct-preview">${has ? structureHtml(draft, { sax: saxNames() }) : ''}</div>
           <p class="err" id="prog-err"></p>
           <div class="row"><button type="button" class="btn btn-primary btn-big" data-c="done" ${has ? '' : 'disabled'}>Fet</button>${has ? '<button type="button" class="btn btn-ghost" data-c="cancel">Cancel·la</button>' : ''}</div>
         </form>`}
@@ -346,7 +349,7 @@ function renderSong(msg = '') {
   if (form) {
     const update = () => {
       const p = parseProgression(draft.prog);
-      $('#struct-preview').innerHTML = p.bars.length ? structureHtml(draft) : '';
+      $('#struct-preview').innerHTML = p.bars.length ? structureHtml(draft, { sax: saxNames() }) : '';
       $('#prog-err').textContent = p.errors.length ? `No entenc: ${p.errors.join(', ')}` : '';
       $('[data-c="done"]', v).disabled = !p.bars.length;
     };

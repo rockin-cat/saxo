@@ -79,15 +79,22 @@ export function songParts(prog) {
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 /** HTML de l'estructura, com a la pestanya «Estructura» del Generador. */
-export function structureHtml(song, { compact = false } = {}) {
+/**
+ * L'estructura de la cançó. `sax`: { name(symbol) → nom de l'acord per al saxofonista, semi, curt }:
+ * cada acord porta a sota, petit, el nom transportat, i la tonalitat surt de les dues maneres.
+ */
+export function structureHtml(song, { compact = false, sax = null } = {}) {
   const { parts, ordre, bars } = songParts(song.prog);
   if (!bars.length) return '<p class="muted">Encara no hi ha acords.</p>';
   const key = detectKey(bars.flatMap((b) => b.map((s) => s.chord)));
   const degs = degrees(key);
-  const bar = (b) => `<span class="cmp-bar">${b.map((s) => `<i style="flex:${s.len};background:${colorOf(s.chord, degs)}">${esc(s.chord.symbol.replace(/^([A-G][#b]?)m(?!aj)/, '$1-'))}</i>`).join('')}</span>`;
+  const dash = (s) => s.replace(/^([A-G][#b]?)m(?!aj)/, '$1-');
+  const saxSmall = (sym) => (sax ? `<small class="sax-nom">${esc(dash(sax.name(sym)))}</small>` : '');
+  const bar = (b) => `<span class="cmp-bar">${b.map((s) => `<i style="flex:${s.len};background:${colorOf(s.chord, degs)}">${esc(dash(s.chord.symbol))}${saxSmall(s.chord.symbol)}</i>`).join('')}</span>`;
   const shown = compact ? parts.slice(0, 2) : parts;
+  const saxKey = sax && key ? ` · ${keyName({ tonica: mod(key.tonica + sax.semi, 12), mode: key.mode })} al ${sax.curt}` : '';
   return `
-    <div class="est-graus">${degs.map((d) => `<span class="est-grau" style="background:${d.color}"><small>${d.rom}</small>${esc(d.nom.replace(/^([A-G][#b]?)m$/, '$1-'))}</span>`).join('')}<span class="est-to">${esc(keyName(key))}</span></div>
+    <div class="est-graus">${degs.map((d) => `<span class="est-grau" style="background:${d.color}"><small>${d.rom}</small>${esc(d.nom.replace(/^([A-G][#b]?)m$/, '$1-'))}${saxSmall(d.nom)}</span>`).join('')}<span class="est-to">${esc(keyName(key))}${esc(saxKey)}</span></div>
     ${ordre.length > 1 ? `<p class="est-ordre"><b>Ordre:</b> ${ordre.map(esc).join(' – ')}</p>` : ''}
     ${shown.map((p) => `<div class="est-part"><div class="est-part-cap">${esc(p.nom.toUpperCase())}<small>${p.bars.length} compassos</small></div><div class="cmp-graella">${p.bars.map(bar).join('')}</div></div>`).join('')}
     ${compact && parts.length > shown.length ? `<p class="muted small">+ ${parts.length - shown.length} parts més</p>` : ''}`;

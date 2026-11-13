@@ -876,3 +876,8 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
 .poster-song span { color: var(--c); margin-left: 4px; }
 .poster-song:hover { background: color-mix(in srgb, var(--c) 12%, #fff); }
 @media (max-width: 760px) { .poster-song { position: static; margin-top: 6px; } }
+
+/* el nom de l'acord per al saxofonista, sota el de la banda */
+.cmp-bar i { flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.05; }
+.cmp-bar i .sax-nom, .est-grau .sax-nom { display: block; font: 600 11px Ubuntu, sans-serif; opacity: .75; }
+.cmp-bar i .sax-nom, .est-grau .sax-nom { font-style: italic; }
