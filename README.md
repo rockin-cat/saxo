@@ -51,7 +51,7 @@ Els del document «Notació Saxo» de ROCKIN: `1` = Si · `2` = La (1+2) · `3` 
 
 ## Versió 8 · 13-11-2026
 
-A la pantalla de la cançó, cada acord porta a sota, petit i en cursiva, el nom que llegeix el saxofonista, i la tonalitat surt de les dues maneres («Re menor · Si menor al saxo alt»).
+A la pantalla de la cançó, els acords surten amb el nom que llegeix el saxofonista (en gran) i el de la banda a sota, petit; la tonalitat, de les dues maneres («Si menor · a la banda, Re menor»).
 
 ## Versió 7 · 13-11-2026
 
