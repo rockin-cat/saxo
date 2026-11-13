@@ -51,7 +51,7 @@ Els del document «Notació Saxo» de ROCKIN: `1` = Si · `2` = La (1+2) · `3` 
 
 ## Versió 4 · 11-11-2026
 
-«Què sé fer» amb tres pestanyes (A la banda · Com vas · Historial). «Com vas» comença per com t'estudies: per a cada estratègia que tries després de tocar, com t'ha anat l'intent següent.
+«Què sé fer» amb tres pestanyes (A la banda · Com vas · Historial). «Com vas» comença per com practiques: per a cada estratègia que tries després de tocar, com t'ha anat l'intent següent.
 
 ## Versió 3 · 11-11-2026
 
