@@ -1,5 +1,5 @@
 // «Què sé fer»: les pestanyes «Com vas» i «Historial» (les mateixes a guitarra i baix i a saxo).
-// «Com vas» comença per com t'estudies: per a cada estratègia que tries després de tocar,
+// «Com vas» comença per com practiques: per a cada estratègia que tries després de tocar,
 // com t'ha anat l'intent següent (avaluació formadora). No mira si coincideix amb el que proposava l'eina.
 
 import { CHOICE, choices, decided, observations, lastDecisions, MIN_DECISIONS } from './autoregulacio.js';
@@ -28,8 +28,8 @@ export function comVasHtml({ title, next, instId, total, fets }) {
     <div class="qsf-kpi"><b>${R.length}</b><span>vegades que has tocat un pas</span></div>
     <div class="qsf-kpi"><b>${dies}</b><span>${dies === 1 ? 'dia' : 'dies'} que has practicat</span></div></div>`;
 
-  // Com t'estudies
-  const intro = `<h3>Com t’estudies</h3><p class="muted small">Quan acabes de tocar, tries com continuar: baixar el tempo, posar la guia, practicar la part que falla… Aquí veus quines d’aquestes estratègies t’ajuden a millorar. El que compta és com et va l’intent següent.</p>`;
+  // Com practiques
+  const intro = `<h3>Com practiques</h3><p class="muted small">Quan acabes de tocar, tries com continuar: baixar el tempo, posar la guia, practicar la part que falla… Aquí veus quines d’aquestes estratègies t’ajuden a millorar. El que compta és com et va l’intent següent.</p>`;
   let estrat;
   if (D.length < MIN_DECISIONS) {
     estrat = `${intro}<p class="qsf-buit">Has triat ${D.length} ${D.length === 1 ? 'vegada' : 'vegades'}. A partir de ${MIN_DECISIONS} tries, aquí veuràs què et funciona.</p>`;

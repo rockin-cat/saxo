@@ -170,6 +170,7 @@ function renderMap() {
         <div class="poster-icon">${saxSvg(i.color)}</div>
         <div class="poster-title"><span class="poster-w1">${w1}</span> <span class="poster-w2">${w2}</span></div>
         <div class="poster-sub">Full de ruta · 10 nivells</div>
+        <button type="button" class="poster-song" data-go="song" title="Vols canviar la cançó o la progressió?">${store.workSong() ? `<b>${esc(store.workSong().titol)}</b> <span>✎</span>` : '<b>Tria la cançó</b>'}</button>
       </div>
       <div class="poster-grid">
         ${levels.map((l, k) => { const p = levelProgress(l); return `
@@ -512,9 +513,9 @@ function stepTitle(instId, id) {
 function pathHtml(instId) {
   const n = decided().length;
   if (n < MIN_DECISIONS) {
-    return `<div class="panel cami-panel"><h3>Com t’estudies</h3><p class="muted">Després de cada intent tries què vols fer: baixar el tempo, posar o treure la guia, tornar a un pas anterior, passar al següent… Quan hagis pres unes quantes decisions (${n} de ${MIN_DECISIONS}), a la pestanya <button type="button" class="link" data-qtab="com">Com vas</button> veuràs quines t'han funcionat.</p></div>`;
+    return `<div class="panel cami-panel"><h3>Com practiques</h3><p class="muted">Després de cada intent tries què vols fer: baixar el tempo, posar o treure la guia, tornar a un pas anterior, passar al següent… Quan hagis pres unes quantes decisions (${n} de ${MIN_DECISIONS}), a la pestanya <button type="button" class="link" data-qtab="com">Com vas</button> veuràs quines t'han funcionat.</p></div>`;
   }
-  return `<div class="panel cami-panel"><h3>Com t’estudies</h3>
+  return `<div class="panel cami-panel"><h3>Com practiques</h3>
     <ul class="qsf-ins"><li>${esc(observations()[0])}</li></ul>
     <p class="muted small">Com et van les estratègies que tries per practicar: a la pestanya <button type="button" class="link" data-qtab="com">Com vas</button>.</p></div>`;
 }
