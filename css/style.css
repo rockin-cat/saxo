@@ -813,7 +813,7 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
 .gsound .ic, .fs-btn .ic { width: 16px; height: 16px; }
 .next-card .pick-badge .ic { width: 26px; height: 26px; }
 
-/* «Què sé fer»: pestanyes A la banda · Com vas · Historial (Com vas comença per com t'estudies) */
+/* «Què sé fer»: pestanyes A la banda · Com vas · Historial (Com vas comença per com practiques) */
 #v-skills { overflow: auto; }
 .qsf-tabs { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
 .qsf-tab { font: 700 13px Ubuntu, sans-serif; border: 1px solid var(--linia); background: #fff; color: var(--gris); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
@@ -870,3 +870,9 @@ body.is-fs[data-view="session"] .lane { height: clamp(110px, calc(100dvh - 520px
 @media (hover: none) and (pointer: coarse) {
   kbd { display: none !important; }
 }
+
+/* Canviar la cançó des del full de ruta (com a guitarra i baix) */
+.poster-song { position: absolute; right: 14px; top: 12px; border: 2px solid var(--c); background: #fff; border-radius: 999px; padding: 6px 14px; font: 500 15px Ubuntu, sans-serif; cursor: pointer; color: var(--tinta); }
+.poster-song span { color: var(--c); margin-left: 4px; }
+.poster-song:hover { background: color-mix(in srgb, var(--c) 12%, #fff); }
+@media (max-width: 760px) { .poster-song { position: static; margin-top: 6px; } }
