@@ -49,7 +49,7 @@ Els del document «Notació Saxo» de ROCKIN: `1` = Si · `2` = La (1+2) · `3` 
 - **«A cegues»**, l'últim pas de cada nivell: el mateix que acabes de fer, sense cap ajuda visual mentre toques. Amb el TravelSax, el joc compara el percentatge amb el del pas amb ajuda: si cau molt, encara depens de la pantalla.
 - **Pantalla senzilla** per defecte (⚙ Configuració): diagrama sense claus laterals ni de trins, el número i «ara ve»; sense el nom de la nota escrita ni el paper dins l'acord (el paper només als passos de nota propera). Els veredictes en text mentre toques estan apagats: el color a la pista i el resum del final.
 
-## Versió 8 · 13-11-2026
+## Versió 9 · 13-11-2026
 
 A la pantalla de la cançó, els acords surten amb el nom que llegeix el saxofonista (en gran) i el de la banda a sota, petit; la tonalitat, de les dues maneres («Si menor · a la banda, Re menor»).
 
