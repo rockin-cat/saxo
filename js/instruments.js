@@ -51,3 +51,18 @@ export function chordTonesInRange(inst, pcs) {
   for (let m = lo; m <= hi; m++) if (pcs.some((pc) => mod(pc, 12) === mod(m, 12))) out.push(m);
   return out;
 }
+
+/**
+ * El nom d'un acord tal com el llegeix el saxofonista (transportat): el Sol de la banda és Mi a l'alt i La al tenor.
+ * Conserva el sufix (m, 7, sus4…) i el baix; tria sostinguts o bemolls segons com venia escrit.
+ */
+export function chordName(inst, symbol) {
+  const m = /^([A-G])([#b]?)([^/]*)(?:\/([A-G])([#b]?))?$/.exec(String(symbol ?? ''));
+  if (!m) return symbol;
+  const flats = m[2] === 'b' || (m[1] === 'F' && !m[2]) || m[5] === 'b';
+  const tr = (letter, acc) => {
+    const pc = mod({ C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[letter] + (acc === '#' ? 1 : acc === 'b' ? -1 : 0) + semi(inst), 12);
+    return (flats ? ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'] : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'])[pc];
+  };
+  return tr(m[1], m[2]) + m[3] + (m[4] ? `/${tr(m[4], m[5])}` : '');
+}

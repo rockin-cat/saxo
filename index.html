@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Noto+Sans:wght@900&family=Poppins:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
   <script>
     window.addEventListener('error', (e) => showPageError(e.message, e.filename, e.lineno));
     window.addEventListener('unhandledrejection', (e) => showPageError(String(e.reason?.message ?? e.reason)));
@@ -27,8 +27,8 @@
       setTimeout(() => { if (!window.__rockinReady) showPageError(why); }, location.protocol === 'file:' ? 300 : 6000);
     });
   </script>
-                <script type="importmap" id="versions">{"imports": {"./js/app.js": "./js/app.js?v=6", "./js/assoliment.js": "./js/assoliment.js?v=6", "./js/audio.js": "./js/audio.js?v=6", "./js/autoregulacio.js": "./js/autoregulacio.js?v=6", "./js/band.js": "./js/band.js?v=6", "./js/guide.js": "./js/guide.js?v=6", "./js/icones.js": "./js/icones.js?v=6", "./js/instruments.js": "./js/instruments.js?v=6", "./js/lane.js": "./js/lane.js?v=6", "./js/levels.js": "./js/levels.js?v=6", "./js/library.js": "./js/library.js?v=6", "./js/midi.js": "./js/midi.js?v=6", "./js/parts.js": "./js/parts.js?v=6", "./js/player.js": "./js/player.js?v=6", "./js/quesefer.js": "./js/quesefer.js?v=6", "./js/saxo-core.js": "./js/saxo-core.js?v=6", "./js/saxview.js": "./js/saxview.js?v=6", "./js/session.js": "./js/session.js?v=6", "./js/sjudge.js": "./js/sjudge.js?v=6", "./js/skills.js": "./js/skills.js?v=6", "./js/songs.js": "./js/songs.js?v=6", "./js/songview.js": "./js/songview.js?v=6", "./js/store.js": "./js/store.js?v=6", "./js/theory.js": "./js/theory.js?v=6", "./js/data/cartes.js": "./js/data/cartes.js?v=6", "./js/data/llibre-obert.js": "./js/data/llibre-obert.js?v=6", "./js/data/llibre.js": "./js/data/llibre.js?v=6", "./js/data/sons.js": "./js/data/sons.js?v=6"}}</script>
-  <script type="module" src="js/app.js?v=6"></script>
+                  <script type="importmap" id="versions">{"imports": {"./js/app.js": "./js/app.js?v=7", "./js/assoliment.js": "./js/assoliment.js?v=7", "./js/audio.js": "./js/audio.js?v=7", "./js/autoregulacio.js": "./js/autoregulacio.js?v=7", "./js/band.js": "./js/band.js?v=7", "./js/guide.js": "./js/guide.js?v=7", "./js/icones.js": "./js/icones.js?v=7", "./js/instruments.js": "./js/instruments.js?v=7", "./js/lane.js": "./js/lane.js?v=7", "./js/levels.js": "./js/levels.js?v=7", "./js/library.js": "./js/library.js?v=7", "./js/midi.js": "./js/midi.js?v=7", "./js/parts.js": "./js/parts.js?v=7", "./js/player.js": "./js/player.js?v=7", "./js/quesefer.js": "./js/quesefer.js?v=7", "./js/saxo-core.js": "./js/saxo-core.js?v=7", "./js/saxview.js": "./js/saxview.js?v=7", "./js/session.js": "./js/session.js?v=7", "./js/sjudge.js": "./js/sjudge.js?v=7", "./js/skills.js": "./js/skills.js?v=7", "./js/songs.js": "./js/songs.js?v=7", "./js/songview.js": "./js/songview.js?v=7", "./js/store.js": "./js/store.js?v=7", "./js/theory.js": "./js/theory.js?v=7", "./js/data/cartes.js": "./js/data/cartes.js?v=7", "./js/data/llibre-obert.js": "./js/data/llibre-obert.js?v=7", "./js/data/llibre.js": "./js/data/llibre.js?v=7", "./js/data/sons.js": "./js/data/sons.js?v=7"}}</script>
+  <script type="module" src="js/app.js?v=7"></script>
 <link rel="stylesheet" href="/marca/capcalera.css">
 </head>
 <body>
@@ -57,7 +57,7 @@
     <button type="button" data-go="map" data-nav="map"><svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg><span>Full de ruta</span></button>
     <button type="button" data-go="skills" data-nav="skills"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></svg><span>Què sé fer</span></button>
     <button type="button" data-go="guide" data-nav="guide"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><span>Llegir la pantalla</span></button>
-    <small class="rail-ver" id="version">v5 · 11-11-2026</small>
+    <small class="rail-ver" id="version">v7 · 13-11-2026</small>
   </nav>
 
   <main>
@@ -77,6 +77,8 @@
       <h2>Configuració</h2>
       <label class="toggle"><input type="checkbox" id="set-simple"> Pantalla senzilla</label>
       <p class="muted small">Només el diagrama (sense les claus laterals ni de trins), el número i «ara ve». Apagat: també el nom de la nota escrita, el paper dins l'acord i el diagrama de la nota següent.</p>
+      <label class="toggle"><input type="checkbox" id="set-chords"> Acords amb els noms de la banda (sense transportar)</label>
+      <p class="muted small">Per defecte, els acords de la pista surten com els llegeix el saxofonista: el Sol de la banda és Mi a l'alt i La al tenor. A la pantalla de la cançó sempre surten els de la banda.</p>
       <label class="toggle"><input type="checkbox" id="set-verdicts"> Veredictes en text mentre toques</label>
       <p class="muted small">Amb el TravelSax: «Perfecte!», «Era 4,5'»… a cada nota. Apagat (per defecte), només el color a la pista i el resum del final.</p>
       <label class="set-row">«Ara ve»: la nota següent apareix al diagrama
@@ -86,7 +88,7 @@
           <option value="4">1 compàs abans</option>
         </select></label>
       <p class="muted small">Com més aviat, més temps per preparar els dits; com més tard, menys coses a la pantalla.</p>
-      <p class="muted small">ROCKIN SCCL · materials amb llicència Creative Commons · sons: mostres lliures (MIT) i saxo sintètic · Versió 5 · 11-11-2026</p>
+      <p class="muted small">ROCKIN SCCL · materials amb llicència Creative Commons · sons: mostres lliures (MIT) i saxo sintètic · Versió 7 · 13-11-2026</p>
       <div class="row"><button class="btn" value="ok">Fet</button></div>
     </form>
   </dialog>

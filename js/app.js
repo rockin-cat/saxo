@@ -534,7 +534,7 @@ document.addEventListener('click', (ev) => {
   if (!b) return;
   if (b.id === 'home-link') { ev.preventDefault(); renderHome(); show('home'); return; }
   if (b.id === 'player-chip') { store.setCurrent(null); renderHome(); show('home'); return; }
-  if (b.id === 'settings-btn') { $('#set-lead').value = String(store.settings().nextLead ?? 2); $('#set-simple').checked = store.settings().simple !== false; $('#set-verdicts').checked = !!store.settings().verdictText; $('#settings').showModal(); return; }
+  if (b.id === 'settings-btn') { $('#set-lead').value = String(store.settings().nextLead ?? 2); $('#set-simple').checked = store.settings().simple !== false; $('#set-verdicts').checked = !!store.settings().verdictText; $('#set-chords').checked = !!store.settings().chordsBand; $('#settings').showModal(); return; }
   if (b.dataset.fs !== undefined) { toggleFullscreen(); return; }
   if (b.id === 'listen-chip') { midi.openDialog({ onChange: midiChip }); return; }
   if (b.dataset.inst && b.closest('#inst-switch, .inst-tiles')) {
@@ -580,6 +580,7 @@ $('#settings').addEventListener('close', () => {
   store.settings().nextLead = Number($('#set-lead').value) || 2;
   store.settings().simple = $('#set-simple').checked;
   store.settings().verdictText = $('#set-verdicts').checked;
+  store.settings().chordsBand = $('#set-chords').checked;
   store.save();
 });
 

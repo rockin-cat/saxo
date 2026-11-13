@@ -5,9 +5,9 @@ import { ic } from './icones.js';
 import * as player from './player.js';
 import { createSaxView } from './saxview.js';
 import { createLane } from './lane.js';
-import { INSTRUMENTS, numOf, nearestPc, chordTonesInRange, comfort, range, writtenName, realOfNum } from './instruments.js';
+import { INSTRUMENTS, numOf, nearestPc, chordTonesInRange, comfort, range, writtenName, realOfNum, chordName } from './instruments.js';
 import { SAXO } from './saxo-core.js';
-import { parseProgression, guessKey, pentatonic, mod, pcName, metre as metreOf, practicePart } from './theory.js';
+import { parseProgression, guessKey, pentatonic, mod, metre as metreOf, practicePart } from './theory.js';
 import { defaultStyle, STYLES } from './band.js';
 import { BINARI, TERNARI, MELODIC, cardById, cardMetre } from './data/cartes.js';
 import { tone, saxTone, audioContext } from './audio.js';
@@ -191,7 +191,9 @@ export function openSession(host, baseStep, ctx) {
   st.blind = !!step.cegues;
   st.sax = createSaxView(st.el('sax'), inst, { simple: st.simple });
   st.showRole = !st.simple || ['propera', 'arp', 'compose'].includes(step.part?.type);
-  st.lane = createLane(st.el('lane'), { color: inst.color });
+  // els noms dels acords, com els llegeix el saxofonista (transportats) o com els diu la banda
+  st.chord = (sym) => (S.chordsBand ? sym : chordName(inst, sym));
+  st.lane = createLane(st.el('lane'), { color: inst.color, chordName: st.chord });
   st.el('tempo').textContent = st.tempo;
   st.el('metro').checked = st.metronome;
   st.el('guide').checked = st.guide > 0;
@@ -845,12 +847,12 @@ function frame(st) {
   const { cur, next } = eventsAround(st, pos);
   const chordNow = content ? chordAtBeat(content.bar, pos.beat, M) : firstChord(st);
   if (st.kind === 'improv' && !(mode === 'question' && cur && cur.abs >= pos.i * M.beats)) {
-    st.sax.show({ mode: 'scale', notes: improvNotes(st, chordNow), key: `${chordNow.symbol}:${st.step.mode}`, label: `${chordNow.symbol} · ${st.step.mode === 'chord' ? 'notes de l\'acord' : `pentatònica de ${pcName(st.key.root)}${st.key.minor ? ' menor' : ' major'}`}` });
+    st.sax.show({ mode: 'scale', notes: improvNotes(st, chordNow), key: `${chordNow.symbol}:${st.step.mode}`, label: `${st.chord(chordNow.symbol)} · ${st.step.mode === 'chord' ? 'notes de l\'acord' : 'pentatònica de la cançó'}` });
   } else if (cur || next) {
     const e = cur ?? next;
     const lead = Math.min(store.settings().nextLead ?? 2, M.pulses) * M.pulseLen;
     const nx = next && next.num !== e.num ? next : nextDifferent(st, pos, e);
-    st.sax.show({ mode: 'note', cur: e, next: nx, showNext: !!nx && nx.abs - pos.abs <= lead + 1e-6, label: e.chord ? `${e.chord}` : '', tag: mode === 'sing' ? 'CANTA' : cur ? 'ARA' : 'PRIMERA NOTA', showRole: st.showRole });
+    st.sax.show({ mode: 'note', cur: e, next: nx, showNext: !!nx && nx.abs - pos.abs <= lead + 1e-6, label: e.chord ? st.chord(e.chord) : '', tag: mode === 'sing' ? 'CANTA' : cur ? 'ARA' : 'PRIMERA NOTA', showRole: st.showRole });
   }
   updateSide(st, content, pos, cur ?? next);
   const bars = pos.bars.slice();
@@ -913,8 +915,8 @@ function showIdle(st) {
   if (st.kind === 'tune') return;
   const c0 = st.song.content(0);
   const e = c0.part.find((x) => !x.tied) ?? c0.part[0];
-  if (st.kind === 'improv') { const ch = firstChord(st); st.sax.show({ mode: 'scale', notes: improvNotes(st, ch), key: `${ch.symbol}:${st.step.mode}`, label: `${ch.symbol} · ${st.step.mode === 'chord' ? 'notes de l\'acord' : 'pentatònica'}` }); }
-  else if (e) st.sax.show({ mode: 'note', cur: e, next: c0.part.find((x) => !x.tied && x.num !== e.num) ?? null, showNext: true, label: `Comença amb: ${e.num ?? e.label}${e.chord ? ` (${e.chord})` : ''}`, tag: 'PRIMERA NOTA', showRole: st.showRole });
+  if (st.kind === 'improv') { const ch = firstChord(st); st.sax.show({ mode: 'scale', notes: improvNotes(st, ch), key: `${ch.symbol}:${st.step.mode}`, label: `${st.chord(ch.symbol)} · ${st.step.mode === 'chord' ? 'notes de l\'acord' : 'pentatònica'}` }); }
+  else if (e) st.sax.show({ mode: 'note', cur: e, next: c0.part.find((x) => !x.tied && x.num !== e.num) ?? null, showNext: true, label: `Comença amb: ${e.num ?? e.label}${e.chord ? ` (${st.chord(e.chord)})` : ''}`, tag: 'PRIMERA NOTA', showRole: st.showRole });
   else st.sax.clear();
   updateSide(st, null, { beat: 0 }, e);
   drawIdleLane(st);
@@ -940,7 +942,7 @@ function setupComposer(st) {
       <button type="button" class="btn btn-ghost btn-small" data-c="save">Desa-la a les meves cançons</button></div>
       <div class="composer-bars">${st.compose.map((b, i) => `
         <div class="cbar">
-          <div class="cbar-chord">${esc(st.bars[i % st.bars.length].map((s) => s.chord.symbol).join(' '))}</div>
+          <div class="cbar-chord">${esc(st.bars[i % st.bars.length].map((s) => st.chord(s.chord.symbol)).join(' '))}</div>
           <button type="button" class="cpick" data-c="rhythm" data-i="${i}" title="Canvia la carta rítmica"><img src="${cardById(b.rhythm)?.img}" alt=""><small>Ritme</small></button>
           <button type="button" class="cpick" data-c="melodic" data-i="${i}" title="Canvia la carta melòdica"><img src="${cardById(b.melodic)?.img}" alt=""><small>Melodia</small></button>
         </div>`).join('')}</div>

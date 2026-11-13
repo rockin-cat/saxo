@@ -4,7 +4,7 @@
 
 const MODE_TEXT = { count: 'COMPTE', demo: 'ESCOLTA', play: 'ARA TU', question: 'PREGUNTA', answer: 'RESPON TU', sing: 'CANTA' };
 
-export function createLane(canvas, { color = '#f97316' } = {}) {
+export function createLane(canvas, { color = '#f97316', chordName = (s) => s } = {}) {
   const ctx2 = canvas.getContext('2d');
   let dpr = 1;
   let w = 0;
@@ -91,7 +91,7 @@ export function createLane(canvas, { color = '#f97316' } = {}) {
         const x = X(i * B + seg.start * B);
         c.fillStyle = '#1f1e1c';
         c.font = '700 16px Ubuntu, sans-serif';
-        c.fillText(seg.chord.symbol, x + 6, content.bar.part && seg.start === 0 ? rowChord + 10 : rowChord);
+        c.fillText(chordName(seg.chord.symbol), x + 6, content.bar.part && seg.start === 0 ? rowChord + 10 : rowChord);
       }
       // esdeveniments de la part
       const showPart = mode !== 'answer' || false;
